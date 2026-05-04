@@ -7,32 +7,36 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- LOGIN -->
+
+  <!-- ===== LOGIN ===== -->
   <div id="login-screen">
     <div class="login-box">
       <div class="login-logo">🏎️</div>
       <h1>Course Automobile</h1>
       <p class="login-sub">Chronométrage en direct</p>
-      <div class="login-buttons">
-        <button class="btn-admin" onclick="login('admin')">👑 Admin</button>
-        <button class="btn-spectator" onclick="login('spectator')">👁️ Spectateur</button>
+
+      <!-- Étape 1 : choix du rôle -->
+      <div id="login-step-role">
+        <div class="login-buttons">
+          <button class="btn-role btn-role-admin" onclick="login('admin')">👑 Admin</button>
+          <button class="btn-role btn-role-spectator" onclick="login('spectator')">👁️ Spectateur</button>
+        </div>
       </div>
-      <div id="admin-pass-area" style="display:none; margin-top:16px;">
-        <input type="password" id="admin-password" class="login-pass-input" placeholder="Mot de passe admin" />
-        <button class="btn-confirm" onclick="confirmAdmin()">Entrer</button>
-        <p id="pass-error-admin" style="color:#ff4444; font-size:12px; display:none; margin-top:8px;">Mot de passe incorrect</p>
-      </div>
-      <div id="spectator-pass-area" style="display:none; margin-top:16px;">
-        <input type="password" id="spectator-password" class="login-pass-input spectator" placeholder="Mot de passe spectateur" />
-        <button class="btn-confirm btn-confirm-spectator" onclick="confirmSpectator()">Entrer</button>
-        <p id="pass-error-spectator" style="color:#ff4444; font-size:12px; display:none; margin-top:8px;">Mot de passe incorrect</p>
+
+      <!-- Étape 2 : saisie du mot de passe (commun aux deux rôles) -->
+      <div id="login-step-pass" style="display:none;">
+        <p id="login-role-label" class="login-role-label"></p>
+        <input type="password" id="login-password" class="login-input" placeholder="Mot de passe" autocomplete="current-password" />
+        <p id="login-error" class="login-error" style="display:none;">Mot de passe incorrect</p>
+        <button id="login-confirm-btn" class="btn-confirm" onclick="confirmLogin()">Entrer</button>
+        <button class="btn-back" onclick="backToRoleChoice()">← Retour</button>
       </div>
     </div>
   </div>
 
-  <!-- APP PRINCIPALE -->
+  <!-- ===== APP ===== -->
   <div id="app" style="display:none;">
-    <!-- HEADER -->
+
     <header>
       <div class="header-left">
         <span class="header-icon">🏎️</span>
@@ -44,7 +48,6 @@
       </div>
     </header>
 
-    <!-- TABS -->
     <nav class="tabs">
       <button class="tab active" onclick="showTab('chrono')" id="tab-chrono">⏱️ Chrono</button>
       <button class="tab" onclick="showTab('results')" id="tab-results">📊 Résultats</button>
@@ -69,52 +72,40 @@
       </div>
 
       <div class="admin-controls admin-only">
-        <button class="btn-start" id="btn-start-race" onclick="startRace()">▶ Démarrer la course</button>
-        <button class="btn-stop" id="btn-stop-race" onclick="stopRace()" style="display:none;">⏹ Arrêter</button>
+        <button class="btn-start" id="btn-start-race" onclick="startRace()">▶ Démarrer</button>
+        <button class="btn-stop" id="btn-stop-race" onclick="stopRace()" style="display:none;">⏹ Pause</button>
         <button class="btn-reset" onclick="resetRace()">🔄 Reset</button>
       </div>
 
-      <!-- TIMER GLOBAL -->
-      <div class="global-timer" id="global-timer">00:00:00</div>
-
-      <!-- PILOTES -->
+      <div class="global-timer" id="global-timer">00:00.00</div>
       <div id="pilots-grid" class="pilots-grid"></div>
     </div>
 
     <!-- TAB RÉSULTATS -->
     <div id="tab-content-results" class="tab-content">
-      <div class="results-header">
-        <h2>📊 Résultats en direct</h2>
-      </div>
+      <div class="results-header"><h2>📊 Résultats en direct</h2></div>
       <div id="results-table-container">
         <table class="results-table">
           <thead>
             <tr>
-              <th>Pos.</th>
-              <th>Pilote</th>
-              <th>Équipe</th>
-              <th>Tours</th>
-              <th>Meilleur tour</th>
-              <th>Temps total</th>
-              <th>Pénalité</th>
-              <th>Statut</th>
+              <th>Pos.</th><th>Pilote</th><th>Équipe</th><th>Tours</th>
+              <th>Meilleur</th><th>Total</th><th>Pénalité</th><th>Statut</th>
             </tr>
           </thead>
           <tbody id="results-tbody"></tbody>
         </table>
       </div>
-
       <div class="lap-history-section">
         <h3>📋 Historique des tours</h3>
         <div id="lap-history"></div>
       </div>
     </div>
 
-    <!-- TAB CONFIG (ADMIN ONLY) -->
+    <!-- TAB CONFIG -->
     <div id="tab-content-settings" class="tab-content">
-      <div class="settings-section">
-        <h2>⚙️ Configuration de la course</h2>
 
+      <div class="settings-section">
+        <h2>⚙️ Course</h2>
         <div class="setting-group">
           <label>Nombre de tours</label>
           <div class="setting-row">
@@ -122,70 +113,67 @@
             <button class="btn-apply" onclick="applyLaps()">Appliquer</button>
           </div>
         </div>
+      </div>
+
+      <div class="settings-section">
+        <h2>🔑 Mots de passe</h2>
 
         <div class="setting-group">
-          <label>🔑 Mot de passe Admin actuel</label>
+          <label>Admin</label>
           <div class="pass-display-row">
-            <span class="pass-display" id="current-admin-pass">—</span>
+            <span class="pass-display" id="current-admin-pass" data-hidden="true">••••••••</span>
             <button class="btn-eye" onclick="togglePasswordDisplay('current-admin-pass', this)">👁</button>
-            <button class="btn-regen" onclick="regenAdminPassword()">🔄 Générer</button>
+            <button class="btn-regen" onclick="regenAdminPassword()">🔄 Nouveau</button>
           </div>
           <div class="setting-row" style="margin-top:8px;">
             <input type="password" id="setting-password" placeholder="Nouveau MDP admin" />
-            <button class="btn-eye" onclick="togglePasswordVisibility('setting-password', this)">👁</button>
             <button class="btn-apply" onclick="changePassword()">Changer</button>
           </div>
         </div>
 
         <div class="setting-group">
-          <label>🔑 Mot de passe Spectateur actuel</label>
+          <label>Spectateur</label>
           <div class="pass-display-row">
-            <span class="pass-display" id="current-spectator-pass">—</span>
+            <span class="pass-display" id="current-spectator-pass" data-hidden="true">••••••••</span>
             <button class="btn-eye" onclick="togglePasswordDisplay('current-spectator-pass', this)">👁</button>
-            <button class="btn-regen" onclick="regenSpectatorPassword()">🔄 Générer</button>
+            <button class="btn-regen" onclick="regenSpectatorPassword()">🔄 Nouveau</button>
           </div>
           <div class="setting-row" style="margin-top:8px;">
             <input type="password" id="setting-spectator-password" placeholder="Nouveau MDP spectateur" />
-            <button class="btn-eye" onclick="togglePasswordVisibility('setting-spectator-password', this)">👁</button>
             <button class="btn-apply" onclick="changeSpectatorPassword()">Changer</button>
           </div>
         </div>
       </div>
 
       <div class="settings-section">
-        <h2>🏁 Gestion des équipes</h2>
-        <div class="team-builder">
-          <div class="setting-row">
-            <input type="text" id="new-team-name" placeholder="Nom de l'équipe" />
-            <div class="color-picker-group">
-              <button class="color-swatch active" style="background:#e74c3c;" onclick="selectTeamColor('#e74c3c', this)"></button>
-              <button class="color-swatch" style="background:#3498db;" onclick="selectTeamColor('#3498db', this)"></button>
-              <button class="color-swatch" style="background:#2ecc71;" onclick="selectTeamColor('#2ecc71', this)"></button>
-              <button class="color-swatch" style="background:#f39c12;" onclick="selectTeamColor('#f39c12', this)"></button>
-              <button class="color-swatch" style="background:#9b59b6;" onclick="selectTeamColor('#9b59b6', this)"></button>
-              <button class="color-swatch" style="background:#1abc9c;" onclick="selectTeamColor('#1abc9c', this)"></button>
-              <button class="color-swatch" style="background:#e67e22;" onclick="selectTeamColor('#e67e22', this)"></button>
-              <button class="color-swatch" style="background:#ecf0f1;" onclick="selectTeamColor('#ecf0f1', this)"></button>
-            </div>
-            <button class="btn-add" onclick="addTeam()">+ Équipe</button>
-          </div>
-          <div id="teams-list" class="teams-list"></div>
+        <h2>🏁 Équipes</h2>
+        <div class="setting-row">
+          <input type="text" id="new-team-name" placeholder="Nom de l'équipe" />
+          <button class="btn-add" onclick="addTeam()">+ Ajouter</button>
         </div>
+        <div class="color-picker-group" style="margin-top:10px;">
+          <button class="color-swatch active" style="background:#e74c3c;" onclick="selectTeamColor('#e74c3c',this)"></button>
+          <button class="color-swatch" style="background:#3498db;" onclick="selectTeamColor('#3498db',this)"></button>
+          <button class="color-swatch" style="background:#2ecc71;" onclick="selectTeamColor('#2ecc71',this)"></button>
+          <button class="color-swatch" style="background:#f39c12;" onclick="selectTeamColor('#f39c12',this)"></button>
+          <button class="color-swatch" style="background:#9b59b6;" onclick="selectTeamColor('#9b59b6',this)"></button>
+          <button class="color-swatch" style="background:#1abc9c;" onclick="selectTeamColor('#1abc9c',this)"></button>
+          <button class="color-swatch" style="background:#e67e22;" onclick="selectTeamColor('#e67e22',this)"></button>
+          <button class="color-swatch" style="background:#ecf0f1;" onclick="selectTeamColor('#ecf0f1',this)"></button>
+        </div>
+        <div id="teams-list" class="teams-list"></div>
       </div>
 
       <div class="settings-section">
-        <h2>👤 Gestion des pilotes</h2>
-        <div class="pilot-builder">
-          <div class="setting-row">
-            <input type="text" id="new-pilot-name" placeholder="Nom du pilote" />
-            <select id="new-pilot-team">
-              <option value="">-- Équipe --</option>
-            </select>
-            <button class="btn-add" onclick="addPilot()">+ Pilote</button>
-          </div>
-          <div id="pilots-list" class="pilots-list"></div>
+        <h2>👤 Pilotes</h2>
+        <div class="setting-row">
+          <input type="text" id="new-pilot-name" placeholder="Nom du pilote" />
+          <select id="new-pilot-team"><option value="">-- Équipe --</option></select>
+          <button class="btn-add" onclick="addPilot()">+ Ajouter</button>
         </div>
+        <div id="pilots-list" class="pilots-list"></div>
       </div>
+
     </div>
   </div>
 
@@ -193,15 +181,15 @@
   <div id="penalty-modal" class="modal" style="display:none;">
     <div class="modal-box">
       <h3>⚠️ Pénalité / DNF</h3>
-      <p id="penalty-pilot-name" style="font-weight:bold; font-size:18px;"></p>
+      <p id="penalty-pilot-name" style="font-weight:bold;font-size:18px;margin-bottom:16px;"></p>
       <div class="penalty-options">
         <div class="penalty-row">
-          <label>Pénalité de temps (secondes)</label>
+          <label>Pénalité (secondes)</label>
           <input type="number" id="penalty-seconds" value="5" min="0" />
-          <button class="btn-penalty" onclick="applyPenalty()">Appliquer pénalité</button>
+          <button class="btn-penalty" onclick="applyPenalty()">Appliquer</button>
         </div>
         <div class="penalty-row">
-          <button class="btn-dnf" onclick="applyDNF()">🚫 DNF - Abandon</button>
+          <button class="btn-dnf" onclick="applyDNF()">🚫 DNF — Abandon</button>
         </div>
       </div>
       <button class="btn-close-modal" onclick="closePenaltyModal()">Fermer</button>
