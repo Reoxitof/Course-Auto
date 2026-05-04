@@ -828,7 +828,8 @@ function showToast(msg) {
 }
 
 // ===== ANTI-SCROLL MOBILE =====
-document.addEventListener('touchend',function(e){if(e.target.tagName==='BUTTON')e.preventDefault();},{passive:false});
+// Empêche le zoom sur double-tap sans bloquer les clics
+document.addEventListener('touchstart', function(){}, {passive:true});
 
 // ===== TOUCHE ENTRÉE =====
 document.getElementById('join-code-input').addEventListener('keydown',function(e){if(e.key==='Enter')joinSession();});
