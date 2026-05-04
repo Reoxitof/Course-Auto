@@ -60,6 +60,35 @@ function saveState() {
   localStorage.setItem(STATE_KEY, JSON.stringify(state));
 }
 
+// ===== SESSION =====
+const SESSION_KEY = 'race_session_role';
+const SESSION_EXPIRY_KEY = 'race_session_expiry';
+const SESSION_DURATION = 8 * 60 * 60 * 1000; // 8 heures en ms
+
+function saveSession(role) {
+  sessionStorage.setItem(SESSION_KEY, role);
+  sessionStorage.setItem(SESSION_EXPIRY_KEY, Date.now() + SESSION_DURATION);
+}
+
+function loadSession() {
+  const role = sessionStorage.getItem(SESSION_KEY);
+  const expiry = parseInt(sessionStorage.getItem(SESSION_EXPIRY_KEY) || '0');
+  if (role && Date.now() < expiry) return role;
+  clearSession();
+  return null;
+}
+
+function clearSession() {
+  sessionStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(SESSION_EXPIRY_KEY);
+}
+
+function refreshSession() {
+  if (currentRole) {
+    sessionStorage.setItem(SESSION_EXPIRY_KEY, Date.now() + SESSION_DURATION);
+  }
+}
+
 // ===== LOGIN =====
 function login(role) {
   // Hide both areas first
@@ -79,6 +108,7 @@ function confirmAdmin() {
   const pass = document.getElementById('admin-password').value;
   if (pass === state.adminPassword) {
     currentRole = 'admin';
+    saveSession('admin');
     document.getElementById('pass-error-admin').style.display = 'none';
     startApp();
   } else {
@@ -91,6 +121,7 @@ function confirmSpectator() {
   const pass = document.getElementById('spectator-password').value;
   if (pass === state.spectatorPassword) {
     currentRole = 'spectator';
+    saveSession('spectator');
     document.getElementById('pass-error-spectator').style.display = 'none';
     startApp();
   } else {
@@ -109,6 +140,7 @@ document.getElementById('spectator-password').addEventListener('keydown', e => {
 
 function logout() {
   currentRole = null;
+  clearSession();
   stopTimer();
   document.getElementById('app').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
@@ -722,3 +754,16 @@ document.addEventListener('touchend', function(e) {
 // ===== INIT =====
 // Pre-select first color swatch
 document.querySelectorAll('.color-swatch')[0]?.classList.add('active');
+
+// Restaurer la session si elle existe encore
+(function restoreSession() {
+  const savedRole = loadSession();
+  if (savedRole) {
+    currentRole = savedRole;
+    startApp();
+  }
+})();
+
+// Rafraîchir l'expiration de session à chaque interaction
+document.addEventListener('click', refreshSession);
+document.addEventListener('touchstart', refreshSession, { passive: true });
