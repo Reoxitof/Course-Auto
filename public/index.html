@@ -482,6 +482,7 @@ function joinSession() {
       if (!state.lapData) state.lapData = {};
       saveSession(currentRole);
       startApp();
+      if (currentRole === 'spectator') startSpectatorSync();
     })
     .catch(function(){ showToast('Erreur connexion serveur'); });
 }
@@ -518,10 +519,14 @@ function startApp() {
     document.body.classList.add('is-admin');
     document.getElementById('role-badge').textContent = '👑 Admin';
     document.getElementById('role-badge').style.color = '#f39c12';
+    document.getElementById('tab-chrono').style.display = '';
   } else {
     document.body.classList.remove('is-admin');
     document.getElementById('role-badge').textContent = '👁️ Spectateur';
     document.getElementById('role-badge').style.color = '#888';
+    // Spectateur : uniquement l'onglet Résultats
+    document.getElementById('tab-chrono').style.display = 'none';
+    showTab('results');
   }
 
   initLapData();
@@ -886,6 +891,7 @@ function copyShareLink(el) {
       .then(function(data) {
         if (data && !data.error) { state = data; if(!state.teams) state.teams=[]; if(!state.lapData) state.lapData={}; }
         startApp();
+        if (currentRole === 'spectator') startSpectatorSync();
       })
       .catch(function(){ startApp(); });
     return;
@@ -898,6 +904,29 @@ function copyShareLink(el) {
     showScreen('screen-join');
   }
 })();
+
+// ===== SYNC SPECTATEUR =====
+var spectatorSyncInterval = null;
+function startSpectatorSync() {
+  if (spectatorSyncInterval) clearInterval(spectatorSyncInterval);
+  spectatorSyncInterval = setInterval(function() {
+    if (!sessionId || currentRole !== 'spectator') return;
+    fetch('/api/session/' + sessionId + '/state')
+      .then(function(r){ return r.json(); })
+      .then(function(data) {
+        if (!data || data.error) return;
+        state = data;
+        if (!state.teams)   state.teams   = [];
+        if (!state.lapData) state.lapData = {};
+        raceElapsed = state.raceElapsed || 0;
+        updateTimerDisplay();
+        renderResults();
+        setStatus(state.raceFinished ? '🏁 Terminée' : state.raceRunning ? '🟢 En course' : raceElapsed > 0 ? '⏸ Pausée' : 'En attente');
+        document.getElementById('max-laps-display').textContent = state.maxLaps;
+      })
+      .catch(function(){});
+  }, 3000);
+}
 </script>
 </body>
 </html>
