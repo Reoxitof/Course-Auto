@@ -531,12 +531,12 @@ function startRace() {
   if (state.raceFinished) { showToast('Course terminée — faites un Reset'); return; }
   state.raceRunning = true;
   saveState(); startTimer(); setRaceButtons(false);
-  setStatus('🟢 En course'); showToast('Course démarrée !'); renderPilots();
+  setStatus('🟢 En course'); showToast('Course démarrée !'); renderCards();
 }
 function stopRace() {
   state.raceRunning = false;
   stopTimer(); saveState(); setRaceButtons(true);
-  setStatus('⏸ Pausée'); showToast('Course en pause');
+  setStatus('⏸ Pausée'); showToast('Course en pause'); renderCards();
 }
 function resetRace() {
   if (!confirm('Réinitialiser toute la course ?')) return;
