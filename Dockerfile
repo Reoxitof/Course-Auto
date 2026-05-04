@@ -1,11 +1,12 @@
-FROM nginx:alpine
+FROM node:20-alpine
 
-# Copie les fichiers statiques dans le dossier servi par nginx
-COPY index.html /usr/share/nginx/html/index.html
-COPY style.css  /usr/share/nginx/html/style.css
-COPY app.js     /usr/share/nginx/html/app.js
+WORKDIR /app
 
-# Config nginx légère pour SPA statique
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY package.json ./
+RUN npm install --production
 
-EXPOSE 80
+COPY server.js ./
+COPY public/ ./public/
+
+EXPOSE 3000
+CMD ["node", "server.js"]

@@ -366,7 +366,7 @@ body.is-admin .tab.admin-only{display:block!important}
 
 <script>
 // ===== CONSTANTES =====
-var STATE_KEY   = 'race_state';
+var SESSION_KEY = 'race_session'; var SESSION_ID_KEY = 'race_session_id';
 var SESSION_KEY = 'race_session';
 
 // ===== GÉNÉRATION CODE 6 CARACTÈRES =====
@@ -416,10 +416,10 @@ function saveState() {
 // ===== SESSION =====
 function saveSession(role)  { sessionStorage.setItem(SESSION_KEY, role); }
 function loadSession()      { return sessionStorage.getItem(SESSION_KEY); }
-function clearSession()     { sessionStorage.removeItem(SESSION_KEY); }
+function clearSession()     { sessionStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(SESSION_ID_KEY); }
 
 // ===== VARIABLES =====
-var state       = loadState();
+var state       = { adminCode:'', spectatorCode:'', maxLaps:10, raceRunning:false, raceFinished:false, raceElapsed:0, teams:[], lapData:{} };
 var currentRole = null;
 var timerInterval = null;
 var raceElapsed   = 0;
@@ -892,3 +892,8 @@ if (savedRole) { currentRole = savedRole; startApp(); }
 </script>
 </body>
 </html>
+
+
+
+
+
