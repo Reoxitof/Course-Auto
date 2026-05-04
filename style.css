@@ -103,7 +103,8 @@ html, body {
 
 .btn-spectator:active { transform: scale(0.97); background: #2e2e2e; }
 
-#admin-password {
+/* Champs de mot de passe dans la login-box */
+.login-pass-input {
   width: 100%;
   background: var(--bg3);
   border: 1px solid var(--border);
@@ -113,9 +114,11 @@ html, body {
   font-size: 15px;
   margin-bottom: 10px;
   outline: none;
+  display: block;
 }
 
-#admin-password:focus { border-color: var(--accent); }
+.login-pass-input:focus { border-color: var(--accent); }
+.login-pass-input.spectator:focus { border-color: var(--blue); }
 
 .btn-confirm {
   width: 100%;

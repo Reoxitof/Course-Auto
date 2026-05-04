@@ -18,14 +18,14 @@
         <button class="btn-spectator" onclick="login('spectator')">👁️ Spectateur</button>
       </div>
       <div id="admin-pass-area" style="display:none; margin-top:16px;">
-        <input type="password" id="admin-password" placeholder="Mot de passe admin" />
+        <input type="password" id="admin-password" class="login-pass-input" placeholder="Mot de passe admin" />
         <button class="btn-confirm" onclick="confirmAdmin()">Entrer</button>
-        <p id="pass-error-admin" style="color:#ff4444; font-size:12px; display:none;">Mot de passe incorrect</p>
+        <p id="pass-error-admin" style="color:#ff4444; font-size:12px; display:none; margin-top:8px;">Mot de passe incorrect</p>
       </div>
       <div id="spectator-pass-area" style="display:none; margin-top:16px;">
-        <input type="password" id="spectator-password" placeholder="Mot de passe spectateur" />
+        <input type="password" id="spectator-password" class="login-pass-input spectator" placeholder="Mot de passe spectateur" />
         <button class="btn-confirm btn-confirm-spectator" onclick="confirmSpectator()">Entrer</button>
-        <p id="pass-error-spectator" style="color:#ff4444; font-size:12px; display:none;">Mot de passe incorrect</p>
+        <p id="pass-error-spectator" style="color:#ff4444; font-size:12px; display:none; margin-top:8px;">Mot de passe incorrect</p>
       </div>
     </div>
   </div>

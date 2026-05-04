@@ -169,14 +169,31 @@ function startApp() {
   renderAll();
 
   // Restore timer if race was running
+  raceElapsed = state.raceElapsed || 0;
   if (state.raceRunning) {
-    raceElapsed = state.raceElapsed || 0;
     startTimer();
-    document.getElementById('btn-start-race').style.display = 'none';
-    document.getElementById('btn-stop-race').style.display = 'flex';
+    // Ces boutons n'existent que pour l'admin
+    if (currentRole === 'admin') {
+      document.getElementById('btn-start-race').style.display = 'none';
+      document.getElementById('btn-stop-race').style.display = 'flex';
+    }
   } else {
-    raceElapsed = state.raceElapsed || 0;
     updateTimerDisplay();
+    if (currentRole === 'admin') {
+      document.getElementById('btn-start-race').style.display = 'flex';
+      document.getElementById('btn-stop-race').style.display = 'none';
+    }
+  }
+
+  // Mettre à jour le statut affiché
+  if (state.raceFinished) {
+    document.getElementById('race-status-display').textContent = '🏁 Terminée';
+  } else if (state.raceRunning) {
+    document.getElementById('race-status-display').textContent = '🟢 En course';
+  } else if (raceElapsed > 0) {
+    document.getElementById('race-status-display').textContent = '⏸ Pausée';
+  } else {
+    document.getElementById('race-status-display').textContent = 'En attente';
   }
 }
 
@@ -319,8 +336,10 @@ function checkRaceFinished() {
     stopTimer();
     saveState();
     document.getElementById('race-status-display').textContent = '🏁 Terminée';
-    document.getElementById('btn-start-race').style.display = 'flex';
-    document.getElementById('btn-stop-race').style.display = 'none';
+    if (currentRole === 'admin') {
+      document.getElementById('btn-start-race').style.display = 'flex';
+      document.getElementById('btn-stop-race').style.display = 'none';
+    }
     showToast('🏁 Course terminée !');
   }
 }
