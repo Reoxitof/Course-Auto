@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,59 +7,70 @@
 <title>Course Automobile</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0d0d0d;--bg2:#1a1a1a;--bg3:#242424;--border:#333;
-  --text:#f0f0f0;--muted:#888;--red:#e74c3c;--red2:#c0392b;
-  --orange:#f39c12;--green:#2ecc71;--blue:#3498db;--r:12px;--rs:8px;
-}
+:root{--bg:#0d0d0d;--bg2:#1a1a1a;--bg3:#242424;--border:#333;--text:#f0f0f0;--muted:#888;--red:#e74c3c;--red2:#c0392b;--orange:#f39c12;--green:#2ecc71;--blue:#3498db;--r:12px;--rs:8px}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:16px;overflow-x:hidden;overscroll-behavior:none}
-/* LOGIN */
-#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1a0a0a 0%,#0d0d0d 70%);padding:20px}
-.login-box{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:36px 28px 32px;width:100%;max-width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6)}
-.login-logo{font-size:52px;margin-bottom:10px}
-.login-box h1{font-size:22px;font-weight:700;margin-bottom:4px}
-.login-sub{color:var(--muted);font-size:14px;margin-bottom:24px}
-.login-buttons{display:flex;flex-direction:column;gap:10px}
-.btn-role{width:100%;border:none;border-radius:var(--r);padding:15px;font-size:16px;font-weight:700;cursor:pointer}
-.btn-role-admin{background:linear-gradient(135deg,var(--red),var(--red2));color:#fff;box-shadow:0 4px 15px rgba(231,76,60,.3)}
-.btn-role-spectator{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
-.login-role-label{font-size:13px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
-.login-input{display:block;width:100%;background:var(--bg3);border:2px solid var(--border);border-radius:var(--rs);color:var(--text);padding:13px 14px;font-size:15px;margin-bottom:8px;outline:none}
-.login-input:focus{border-color:var(--red)}
-.login-input.spectator:focus{border-color:var(--blue)}
-.login-error{color:#ff5555;font-size:13px;margin-bottom:8px}
-.btn-confirm{display:block;width:100%;border:none;border-radius:var(--rs);padding:13px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px}
-.btn-confirm.admin-mode{background:var(--red);color:#fff}
-.btn-confirm.spectator-mode{background:var(--blue);color:#fff}
-.btn-back{display:block;width:100%;background:transparent;border:1px solid var(--border);border-radius:var(--rs);color:var(--muted);padding:10px;font-size:14px;cursor:pointer}
-/* HEADER */
+
+/* ===== ÉCRANS ===== */
+.screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse at center,#1a0a0a 0%,#0d0d0d 70%)}
+.box{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:36px 28px 32px;width:100%;max-width:360px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.box-logo{font-size:52px;margin-bottom:10px}
+.box h1{font-size:22px;font-weight:700;margin-bottom:4px}
+.box h2{font-size:18px;font-weight:700;margin-bottom:16px}
+.box-sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+
+/* ===== BOUTONS PRINCIPAUX ===== */
+.btn-main{display:block;width:100%;border:none;border-radius:var(--r);padding:16px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:10px}
+.btn-main-red{background:linear-gradient(135deg,var(--red),var(--red2));color:#fff;box-shadow:0 4px 15px rgba(231,76,60,.3)}
+.btn-main-dark{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
+.btn-main-blue{background:linear-gradient(135deg,var(--blue),#2980b9);color:#fff;box-shadow:0 4px 15px rgba(52,152,219,.3)}
+.btn-main-green{background:linear-gradient(135deg,var(--green),#27ae60);color:#fff;box-shadow:0 4px 15px rgba(46,204,113,.3)}
+.btn-back{display:block;width:100%;background:transparent;border:1px solid var(--border);border-radius:var(--rs);color:var(--muted);padding:10px;font-size:14px;cursor:pointer;margin-top:8px}
+
+/* ===== INPUT ===== */
+.field{display:block;width:100%;background:var(--bg3);border:2px solid var(--border);border-radius:var(--rs);color:var(--text);padding:13px 14px;font-size:15px;margin-bottom:10px;outline:none;text-align:center;letter-spacing:3px;font-weight:700}
+.field:focus{border-color:var(--red)}
+.field.blue:focus{border-color:var(--blue)}
+.field-error{color:#ff5555;font-size:13px;margin-bottom:10px}
+.field-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;text-align:left}
+
+/* ===== CODES SESSION ===== */
+.session-codes{display:flex;flex-direction:column;gap:12px;margin:16px 0}
+.code-block{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:14px 16px;text-align:left}
+.code-block-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.code-block-value{font-size:28px;font-weight:900;letter-spacing:6px;font-family:'Courier New',monospace}
+.code-admin{color:var(--red)}
+.code-spectator{color:var(--blue)}
+.code-copy-btn{float:right;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:4px 10px;font-size:12px;cursor:pointer;margin-top:2px}
+
+/* ===== HEADER ===== */
 header{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
 .header-left{display:flex;align-items:center;gap:8px}
 .header-icon{font-size:22px}
 .header-title{font-size:16px;font-weight:700}
-.header-right{display:flex;align-items:center;gap:10px}
+.header-right{display:flex;align-items:center;gap:8px}
 #role-badge{font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border)}
 .btn-logout{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:var(--rs);padding:6px 12px;font-size:13px;cursor:pointer}
-/* TABS */
+
+/* ===== TABS ===== */
 .tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex:1;min-width:80px;background:transparent;border:none;color:var(--muted);padding:14px 8px;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
 .tab.active{color:var(--red);border-bottom-color:var(--red)}
 .tab-content{display:none;padding:16px}
 .tab-content.active{display:block}
-/* RACE BAR */
+
+/* ===== RACE ===== */
 .race-info-bar{display:flex;gap:8px;margin-bottom:16px}
 .race-stat{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:10px 8px;text-align:center}
 .stat-label{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
 .stat-value{display:block;font-size:20px;font-weight:800}
-/* CONTROLS */
 .admin-controls{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
 .btn-start{flex:1;background:linear-gradient(135deg,var(--green),#27ae60);color:#fff;border:none;border-radius:var(--r);padding:14px;font-size:15px;font-weight:700;cursor:pointer}
 .btn-stop{flex:1;background:linear-gradient(135deg,var(--red),var(--red2));color:#fff;border:none;border-radius:var(--r);padding:14px;font-size:15px;font-weight:700;cursor:pointer}
 .btn-reset{background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;font-size:15px;font-weight:600;cursor:pointer}
-/* TIMER */
 .global-timer{text-align:center;font-size:44px;font-weight:900;color:var(--orange);letter-spacing:2px;margin-bottom:20px;font-family:'Courier New',monospace;text-shadow:0 0 30px rgba(243,156,18,.4)}
-/* PILOTS */
+
+/* ===== PILOTS ===== */
 .pilots-grid{display:flex;flex-direction:column;gap:10px}
 .pilot-card{border-radius:var(--r);border:2px solid transparent;overflow:hidden}
 .pilot-card.dnf{opacity:.5;filter:grayscale(.7)}
@@ -77,7 +89,8 @@ header{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px
 .btn-penalty-open{background:rgba(243,156,18,.2);border:none;border-left:1px solid rgba(255,255,255,.08);padding:14px 16px;font-size:18px;cursor:pointer;color:var(--orange)}
 .pilot-penalty-badge{font-size:11px;color:var(--orange);padding:2px 8px;background:rgba(243,156,18,.15);border-radius:10px;margin-top:3px;display:inline-block}
 .dnf-badge{font-size:11px;color:#ff4444;padding:2px 8px;background:rgba(255,68,68,.15);border-radius:10px;margin-top:3px;display:inline-block}
-/* RESULTS */
+
+/* ===== RESULTS ===== */
 .results-header h2{font-size:18px;font-weight:700;margin-bottom:14px}
 #results-table-container{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border);margin-bottom:24px}
 .results-table{width:100%;border-collapse:collapse;font-size:13px}
@@ -87,14 +100,14 @@ header{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px
 .pos-1{background:#f39c12;color:#000}.pos-2{background:#bdc3c7;color:#000}.pos-3{background:#cd7f32;color:#000}.pos-other{background:var(--bg3);color:var(--text)}
 .team-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
 .status-racing{color:var(--green);font-weight:700}.status-dnf{color:#ff4444;font-weight:700}.status-finished{color:var(--orange);font-weight:700}
-/* LAP HISTORY */
 .lap-history-section h3{font-size:16px;font-weight:700;margin-bottom:12px}
 .lap-history-pilot{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);margin-bottom:10px;overflow:hidden}
 .lap-history-pilot-header{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--bg3);font-weight:700;font-size:14px}
 .lap-history-laps{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px}
 .lap-chip{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;font-family:'Courier New',monospace}
 .lap-chip.best{border-color:var(--green);color:var(--green)}
-/* SETTINGS */
+
+/* ===== SETTINGS ===== */
 .settings-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:16px}
 .settings-section h2{font-size:16px;font-weight:700;margin-bottom:16px}
 .setting-group{margin-bottom:16px}
@@ -112,12 +125,12 @@ header{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px
 .team-item-name,.pilot-item-name{flex:1;font-size:14px;font-weight:600}
 .pilot-item-team{font-size:12px;color:var(--muted)}
 .btn-delete{background:transparent;border:none;color:#ff4444;font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px}
-/* PASSWORD */
 .pass-display-row{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:10px 14px;margin-bottom:4px}
 .pass-display{flex:1;font-family:'Courier New',monospace;font-size:15px;font-weight:700;color:var(--orange);letter-spacing:2px;word-break:break-all}
 .btn-eye{background:transparent;border:none;font-size:18px;cursor:pointer;padding:2px 6px;border-radius:6px;flex-shrink:0}
 .btn-regen{background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:var(--rs);padding:6px 10px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}
-/* MODAL */
+
+/* ===== MODAL ===== */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:flex;align-items:flex-end;justify-content:center}
 .modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:28px 24px 40px;width:100%;max-width:480px}
 .modal-box h3{font-size:18px;font-weight:700;margin-bottom:12px}
@@ -128,42 +141,80 @@ header{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px
 .btn-penalty{background:var(--orange);color:#000;border:none;border-radius:var(--rs);padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer}
 .btn-dnf{width:100%;background:linear-gradient(135deg,#ff4444,#cc0000);color:#fff;border:none;border-radius:var(--r);padding:14px;font-size:16px;font-weight:700;cursor:pointer}
 .btn-close-modal{width:100%;background:var(--bg3);color:var(--muted);border:1px solid var(--border);border-radius:var(--r);padding:12px;font-size:14px;cursor:pointer;margin-top:8px}
-/* TOAST */
+
+/* ===== TOAST ===== */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg3);border:1px solid var(--border);border-radius:30px;padding:12px 24px;font-size:14px;font-weight:600;z-index:300;transition:transform .3s ease;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.5)}
 .toast.show{transform:translateX(-50%) translateY(0)}
-/* ADMIN ONLY */
+
+/* ===== ADMIN ONLY ===== */
 .admin-only{display:none!important}
 body.is-admin .admin-only{display:flex!important}
 body.is-admin .tab.admin-only{display:block!important}
+
 @media(min-width:600px){.pilots-grid{display:grid;grid-template-columns:repeat(2,1fr)}.global-timer{font-size:56px}}
 @media(min-width:900px){.pilots-grid{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">🏎️</div>
+<!-- ===== ÉCRAN 1 : ACCUEIL ===== -->
+<div id="screen-home" class="screen">
+  <div class="box">
+    <div class="box-logo">🏎️</div>
     <h1>Course Automobile</h1>
-    <p class="login-sub">Chronométrage en direct</p>
-    <div id="login-step-role">
-      <div class="login-buttons">
-        <button class="btn-role btn-role-admin" onclick="login('admin')">👑 Admin</button>
-        <button class="btn-role btn-role-spectator" onclick="login('spectator')">👁️ Spectateur</button>
-      </div>
-    </div>
-    <div id="login-step-pass" style="display:none;">
-      <p id="login-role-label" class="login-role-label"></p>
-      <input type="password" id="login-password" class="login-input" placeholder="Mot de passe"/>
-      <p id="login-error" class="login-error" style="display:none;">Mot de passe incorrect</p>
-      <button id="login-confirm-btn" class="btn-confirm admin-mode" onclick="confirmLogin()">Entrer</button>
-      <button class="btn-back" onclick="backToRoleChoice()">← Retour</button>
-    </div>
+    <p class="box-sub">Chronométrage en direct</p>
+    <button class="btn-main btn-main-red" onclick="showScreen('screen-create')">👑 Créer une session</button>
+    <button class="btn-main btn-main-dark" onclick="showScreen('screen-join')">🔑 Rejoindre une session</button>
   </div>
 </div>
 
-<!-- APP -->
+<!-- ===== ÉCRAN 2 : CRÉER SESSION (ADMIN) ===== -->
+<div id="screen-create" class="screen" style="display:none;">
+  <div class="box">
+    <div class="box-logo">👑</div>
+    <h2>Créer une session</h2>
+    <p class="box-sub">Un code Admin et un code Spectateur seront générés automatiquement.</p>
+    <button class="btn-main btn-main-green" onclick="createSession()">✨ Générer les codes</button>
+    <button class="btn-back" onclick="showScreen('screen-home')">← Retour</button>
+  </div>
+</div>
+
+<!-- ===== ÉCRAN 3 : CODES GÉNÉRÉS ===== -->
+<div id="screen-codes" class="screen" style="display:none;">
+  <div class="box">
+    <div class="box-logo">🔐</div>
+    <h2>Session créée !</h2>
+    <p class="box-sub">Partagez le code Spectateur avec vos participants.</p>
+    <div class="session-codes">
+      <div class="code-block">
+        <div class="code-block-label">👑 Code Admin (gardez-le secret)</div>
+        <div class="code-block-value code-admin" id="display-admin-code">——</div>
+      </div>
+      <div class="code-block">
+        <div class="code-block-label">👁️ Code Spectateur (à partager)</div>
+        <div class="code-block-value code-spectator" id="display-spectator-code">——</div>
+      </div>
+    </div>
+    <button class="btn-main btn-main-red" onclick="enterAsAdmin()">▶ Entrer comme Admin</button>
+    <button class="btn-back" onclick="showScreen('screen-home')">← Retour</button>
+  </div>
+</div>
+
+<!-- ===== ÉCRAN 4 : REJOINDRE (SPECTATEUR) ===== -->
+<div id="screen-join" class="screen" style="display:none;">
+  <div class="box">
+    <div class="box-logo">👁️</div>
+    <h2>Rejoindre</h2>
+    <p class="box-sub">Entrez le code reçu par l'organisateur.</p>
+    <p class="field-label">Votre code</p>
+    <input type="text" id="join-code-input" class="field blue" placeholder="XXXXXX" maxlength="6" oninput="this.value=this.value.toUpperCase()"/>
+    <p id="join-error" class="field-error" style="display:none;">Code incorrect</p>
+    <button class="btn-main btn-main-blue" onclick="joinSession()">Rejoindre</button>
+    <button class="btn-back" onclick="showScreen('screen-home')">← Retour</button>
+  </div>
+</div>
+
+<!-- ===== APP PRINCIPALE ===== -->
 <div id="app" style="display:none;">
   <header>
     <div class="header-left">
@@ -225,35 +276,24 @@ body.is-admin .tab.admin-only{display:block!important}
         </div>
       </div>
     </div>
-
     <div class="settings-section">
-      <h2>🔑 Mots de passe</h2>
+      <h2>🔑 Codes de session</h2>
       <div class="setting-group">
-        <label>Admin</label>
+        <label>Code Admin actuel</label>
         <div class="pass-display-row">
-          <span class="pass-display" id="current-admin-pass" data-hidden="true">••••••••</span>
+          <span class="pass-display code-admin" id="current-admin-pass" data-hidden="true">••••••</span>
           <button class="btn-eye" onclick="togglePasswordDisplay('current-admin-pass',this)">👁</button>
-          <button class="btn-regen" onclick="regenAdminPassword()">🔄 Nouveau</button>
-        </div>
-        <div class="setting-row" style="margin-top:8px;">
-          <input type="password" id="setting-password" placeholder="Nouveau MDP admin"/>
-          <button class="btn-apply" onclick="changePassword()">Changer</button>
+          <button class="btn-regen" onclick="regenCodes()">🔄 Régénérer</button>
         </div>
       </div>
       <div class="setting-group">
-        <label>Spectateur</label>
+        <label>Code Spectateur actuel</label>
         <div class="pass-display-row">
-          <span class="pass-display" id="current-spectator-pass" data-hidden="true">••••••••</span>
+          <span class="pass-display code-spectator" id="current-spectator-pass" data-hidden="true">••••••</span>
           <button class="btn-eye" onclick="togglePasswordDisplay('current-spectator-pass',this)">👁</button>
-          <button class="btn-regen" onclick="regenSpectatorPassword()">🔄 Nouveau</button>
-        </div>
-        <div class="setting-row" style="margin-top:8px;">
-          <input type="password" id="setting-spectator-password" placeholder="Nouveau MDP spectateur"/>
-          <button class="btn-apply" onclick="changeSpectatorPassword()">Changer</button>
         </div>
       </div>
     </div>
-
     <div class="settings-section">
       <h2>🏁 Équipes</h2>
       <div class="setting-row">
@@ -272,7 +312,6 @@ body.is-admin .tab.admin-only{display:block!important}
       </div>
       <div id="teams-list" class="teams-list"></div>
     </div>
-
     <div class="settings-section">
       <h2>👤 Pilotes</h2>
       <div class="setting-row">
@@ -306,22 +345,22 @@ body.is-admin .tab.admin-only{display:block!important}
 
 <script>
 // ===== CONSTANTES =====
-const STATE_KEY   = 'race_state';
-const SESSION_KEY = 'race_session';
+var STATE_KEY   = 'race_state';
+var SESSION_KEY = 'race_session';
 
-// ===== GÉNÉRATION MDP =====
-function generatePassword() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789@#$%';
-  const arr = new Uint8Array(8);
+// ===== GÉNÉRATION CODE 6 CARACTÈRES =====
+function generateCode() {
+  var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  var arr = new Uint8Array(6);
   crypto.getRandomValues(arr);
-  return Array.from(arr, b => chars[b % chars.length]).join('');
+  return Array.from(arr, function(b){ return chars[b % chars.length]; }).join('');
 }
 
 // ===== STATE =====
 function defaultState() {
   return {
-    adminPassword: generatePassword(),
-    spectatorPassword: generatePassword(),
+    adminCode: generateCode(),
+    spectatorCode: generateCode(),
     maxLaps: 10,
     raceRunning: false,
     raceFinished: false,
@@ -342,11 +381,11 @@ function defaultState() {
 
 function loadState() {
   try {
-    const raw = localStorage.getItem(STATE_KEY);
+    var raw = localStorage.getItem(STATE_KEY);
     if (raw) {
-      const s = JSON.parse(raw);
-      if (!s.spectatorPassword) s.spectatorPassword = generatePassword();
-      if (!s.adminPassword)     s.adminPassword     = generatePassword();
+      var s = JSON.parse(raw);
+      if (!s.spectatorCode) s.spectatorCode = generateCode();
+      if (!s.adminCode)     s.adminCode     = generateCode();
       return s;
     }
   } catch(e) {}
@@ -366,66 +405,78 @@ function clearSession()     { sessionStorage.removeItem(SESSION_KEY); }
 // ===== VARIABLES =====
 var state       = loadState();
 var currentRole = null;
-var pendingRole = null;
 var timerInterval = null;
 var raceElapsed   = 0;
 var penaltyTargetId = null;
 var selectedTeamColorValue = '#e74c3c';
 
-// ===== LOGIN =====
-function login(role) {
-  pendingRole = role;
-  var isAdmin = role === 'admin';
-  document.getElementById('login-step-role').style.display = 'none';
-  document.getElementById('login-step-pass').style.display = 'block';
-  document.getElementById('login-role-label').textContent = isAdmin ? '👑 Connexion Admin' : '👁️ Connexion Spectateur';
-  var btn = document.getElementById('login-confirm-btn');
-  btn.className = 'btn-confirm ' + (isAdmin ? 'admin-mode' : 'spectator-mode');
-  var input = document.getElementById('login-password');
-  input.className = 'login-input' + (isAdmin ? '' : ' spectator');
-  input.value = '';
-  document.getElementById('login-error').style.display = 'none';
-  setTimeout(function(){ input.focus(); }, 50);
+// ===== NAVIGATION ÉCRANS =====
+function showScreen(id) {
+  var screens = ['screen-home','screen-create','screen-codes','screen-join'];
+  for (var i = 0; i < screens.length; i++) {
+    var el = document.getElementById(screens[i]);
+    if (el) el.style.display = screens[i] === id ? 'flex' : 'none';
+  }
+  document.getElementById('app').style.display = 'none';
 }
 
-function backToRoleChoice() {
-  pendingRole = null;
-  document.getElementById('login-step-pass').style.display = 'none';
-  document.getElementById('login-step-role').style.display = 'block';
-  document.getElementById('login-password').value = '';
-  document.getElementById('login-error').style.display = 'none';
+// ===== CRÉER SESSION =====
+function createSession() {
+  // Génère deux nouveaux codes
+  state.adminCode     = generateCode();
+  state.spectatorCode = generateCode();
+  saveState();
+  document.getElementById('display-admin-code').textContent     = state.adminCode;
+  document.getElementById('display-spectator-code').textContent = state.spectatorCode;
+  showScreen('screen-codes');
 }
 
-function confirmLogin() {
-  var pass     = document.getElementById('login-password').value;
-  var expected = pendingRole === 'admin' ? state.adminPassword : state.spectatorPassword;
-  if (pass === expected) {
-    currentRole = pendingRole;
-    saveSession(currentRole);
-    document.getElementById('login-error').style.display = 'none';
+function enterAsAdmin() {
+  currentRole = 'admin';
+  saveSession('admin');
+  startApp();
+}
+
+// ===== REJOINDRE SESSION =====
+function joinSession() {
+  var code = document.getElementById('join-code-input').value.trim().toUpperCase();
+  var err  = document.getElementById('join-error');
+  if (code === state.adminCode) {
+    currentRole = 'admin';
+    saveSession('admin');
+    err.style.display = 'none';
+    startApp();
+  } else if (code === state.spectatorCode) {
+    currentRole = 'spectator';
+    saveSession('spectator');
+    err.style.display = 'none';
     startApp();
   } else {
-    document.getElementById('login-error').style.display = 'block';
-    document.getElementById('login-password').value = '';
-    document.getElementById('login-password').focus();
+    err.style.display = 'block';
+    document.getElementById('join-code-input').value = '';
   }
 }
 
+// ===== LOGOUT =====
 function logout() {
   currentRole = null;
-  pendingRole = null;
   clearSession();
   stopTimer();
   document.getElementById('app').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'flex';
-  backToRoleChoice();
   document.body.classList.remove('is-admin');
+  showScreen('screen-home');
 }
 
 // ===== DÉMARRAGE APP =====
 function startApp() {
-  document.getElementById('login-screen').style.display = 'none';
+  // Cacher tous les écrans
+  var screens = ['screen-home','screen-create','screen-codes','screen-join'];
+  for (var i = 0; i < screens.length; i++) {
+    var el = document.getElementById(screens[i]);
+    if (el) el.style.display = 'none';
+  }
   document.getElementById('app').style.display = 'block';
+
   if (currentRole === 'admin') {
     document.body.classList.add('is-admin');
     document.getElementById('role-badge').textContent = '👑 Admin';
@@ -435,16 +486,13 @@ function startApp() {
     document.getElementById('role-badge').textContent = '👁️ Spectateur';
     document.getElementById('role-badge').style.color = '#888';
   }
+
   initLapData();
   renderAll();
   raceElapsed = state.raceElapsed || 0;
-  if (state.raceRunning) {
-    startTimer();
-    setRaceButtons(false);
-  } else {
-    updateTimerDisplay();
-    setRaceButtons(true);
-  }
+  if (state.raceRunning) { startTimer(); setRaceButtons(false); }
+  else { updateTimerDisplay(); setRaceButtons(true); }
+
   if (state.raceFinished)     setStatus('🏁 Terminée');
   else if (state.raceRunning) setStatus('🟢 En course');
   else if (raceElapsed > 0)   setStatus('⏸ Pausée');
@@ -456,10 +504,7 @@ function setRaceButtons(showStart) {
   document.getElementById('btn-start-race').style.display = showStart ? 'flex' : 'none';
   document.getElementById('btn-stop-race').style.display  = showStart ? 'none' : 'flex';
 }
-
-function setStatus(txt) {
-  document.getElementById('race-status-display').textContent = txt;
-}
+function setStatus(txt) { document.getElementById('race-status-display').textContent = txt; }
 
 // ===== TABS =====
 function showTab(name) {
@@ -477,13 +522,11 @@ function startRace() {
   saveState(); startTimer(); setRaceButtons(false);
   setStatus('🟢 En course'); showToast('Course démarrée !'); renderPilots();
 }
-
 function stopRace() {
   state.raceRunning = false;
   stopTimer(); saveState(); setRaceButtons(true);
   setStatus('⏸ Pausée'); showToast('Course en pause');
 }
-
 function resetRace() {
   if (!confirm('Réinitialiser toute la course ?')) return;
   state.raceRunning = false; state.raceFinished = false;
@@ -503,53 +546,38 @@ function startTimer() {
     if (Math.floor(raceElapsed/5000) !== Math.floor((raceElapsed-50)/5000)) saveState();
   }, 50);
 }
-
-function stopTimer() {
-  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
-}
-
-function updateTimerDisplay() {
-  document.getElementById('global-timer').textContent = formatTime(raceElapsed);
-}
-
+function stopTimer() { if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } }
+function updateTimerDisplay() { document.getElementById('global-timer').textContent = formatTime(raceElapsed); }
 function formatTime(ms) {
   if (ms < 0) ms = 0;
-  var m  = Math.floor(ms / 60000);
-  var s  = Math.floor((ms % 60000) / 1000);
-  var cs = Math.floor((ms % 1000) / 10);
-  return pad(m) + ':' + pad(s) + '.' + pad(cs);
+  var m = Math.floor(ms/60000), s = Math.floor((ms%60000)/1000), cs = Math.floor((ms%1000)/10);
+  return pad(m)+':'+pad(s)+'.'+pad(cs);
 }
-
 function pad(n) { return String(n).padStart(2,'0'); }
 
 // ===== TOURS =====
 function initLapData() {
   state.pilots.forEach(function(p) {
-    if (!state.lapData[p.id])
-      state.lapData[p.id] = { laps:[], penalty:0, dnf:false, lapStartTime:0 };
+    if (!state.lapData[p.id]) state.lapData[p.id] = { laps:[], penalty:0, dnf:false, lapStartTime:0 };
   });
 }
-
 function recordLap(pilotId) {
   if (!state.raceRunning) { showToast('La course n\'est pas démarrée'); return; }
   var data = state.lapData[pilotId];
   if (!data || data.dnf) return;
   var lapTime = raceElapsed - (data.lapStartTime || 0);
-  data.laps.push(lapTime);
-  data.lapStartTime = raceElapsed;
+  data.laps.push(lapTime); data.lapStartTime = raceElapsed;
   var pilot = state.pilots.find(function(p){ return p.id === pilotId; });
   showToast(pilot.name + ' — Tour ' + data.laps.length + ': ' + formatTime(lapTime));
   if (data.laps.length >= state.maxLaps) checkRaceFinished();
   saveState(); renderPilots(); renderResults();
 }
-
 function checkRaceFinished() {
   var active  = state.pilots.filter(function(p){ return !state.lapData[p.id].dnf; });
   var allDone = active.every(function(p){ return (state.lapData[p.id].laps.length||0) >= state.maxLaps; });
   if (allDone) {
     state.raceFinished = true; state.raceRunning = false;
-    stopTimer(); saveState();
-    setStatus('🏁 Terminée'); setRaceButtons(true); showToast('🏁 Course terminée !');
+    stopTimer(); saveState(); setStatus('🏁 Terminée'); setRaceButtons(true); showToast('🏁 Course terminée !');
   }
 }
 
@@ -562,26 +590,20 @@ function openPenaltyModal(pilotId) {
   document.getElementById('penalty-seconds').value = 5;
   document.getElementById('penalty-modal').style.display = 'flex';
 }
-
-function closePenaltyModal() {
-  document.getElementById('penalty-modal').style.display = 'none';
-  penaltyTargetId = null;
-}
-
+function closePenaltyModal() { document.getElementById('penalty-modal').style.display = 'none'; penaltyTargetId = null; }
 function applyPenalty() {
   if (!penaltyTargetId) return;
   var secs = parseInt(document.getElementById('penalty-seconds').value) || 0;
   state.lapData[penaltyTargetId].penalty = (state.lapData[penaltyTargetId].penalty||0) + secs*1000;
   var pilot = state.pilots.find(function(p){ return p.id === penaltyTargetId; });
-  showToast('+' + secs + 's pénalité — ' + pilot.name);
+  showToast('+'+secs+'s — '+pilot.name);
   saveState(); closePenaltyModal(); renderPilots(); renderResults();
 }
-
 function applyDNF() {
   if (!penaltyTargetId) return;
   state.lapData[penaltyTargetId].dnf = true;
   var pilot = state.pilots.find(function(p){ return p.id === penaltyTargetId; });
-  showToast('🚫 DNF — ' + pilot.name);
+  showToast('🚫 DNF — '+pilot.name);
   saveState(); closePenaltyModal(); checkRaceFinished(); renderPilots(); renderResults();
 }
 
@@ -594,48 +616,47 @@ function renderPilots() {
     return;
   }
   state.pilots.forEach(function(pilot) {
-    var team  = state.teams.find(function(t){ return t.id === pilot.teamId; });
+    var team = state.teams.find(function(t){ return t.id === pilot.teamId; });
     var color = team ? team.color : '#888';
-    var data  = state.lapData[pilot.id] || { laps:[], penalty:0, dnf:false };
-    var lapCount   = data.laps.length;
-    var lastLap    = lapCount > 0 ? data.laps[lapCount-1] : null;
-    var isDNF      = data.dnf;
-    var isFinished = lapCount >= state.maxLaps;
-    var canLap     = state.raceRunning && !isDNF && !isFinished && currentRole === 'admin';
+    var data = state.lapData[pilot.id] || { laps:[], penalty:0, dnf:false };
+    var lapCount = data.laps.length;
+    var lastLap = lapCount > 0 ? data.laps[lapCount-1] : null;
+    var isDNF = data.dnf, isFinished = lapCount >= state.maxLaps;
+    var canLap = state.raceRunning && !isDNF && !isFinished && currentRole === 'admin';
     var badge = '';
-    if (isDNF)           badge = '<span class="dnf-badge">🚫 DNF</span>';
+    if (isDNF) badge = '<span class="dnf-badge">🚫 DNF</span>';
     else if (isFinished) badge = '<span class="pilot-penalty-badge" style="color:var(--green);background:rgba(46,204,113,.15)">🏁 Terminé</span>';
-    else if (data.penalty > 0) badge = '<span class="pilot-penalty-badge">+' + (data.penalty/1000) + 's pén.</span>';
+    else if (data.penalty > 0) badge = '<span class="pilot-penalty-badge">+'+(data.penalty/1000)+'s pén.</span>';
     var card = document.createElement('div');
     card.className = 'pilot-card' + (isDNF ? ' dnf' : '');
-    card.style.background  = 'linear-gradient(135deg,' + color + '18,' + color + '08)';
-    card.style.borderColor = isDNF ? '#ff444444' : color + '44';
+    card.style.background = 'linear-gradient(135deg,'+color+'18,'+color+'08)';
+    card.style.borderColor = isDNF ? '#ff444444' : color+'44';
     card.innerHTML =
-      '<div class="pilot-card-header">' +
-        '<div class="pilot-color-bar" style="background:' + color + '"></div>' +
-        '<div class="pilot-info">' +
-          '<div class="pilot-name">' + pilot.name + '</div>' +
-          '<div class="pilot-team">' + (team ? team.name : 'Sans équipe') + '</div>' +
-          badge +
-        '</div>' +
-        '<div class="pilot-lap-info">' +
-          '<div class="pilot-lap-count" style="color:' + color + '">' + lapCount + '</div>' +
-          '<div class="pilot-lap-label">/ ' + state.maxLaps + ' tours</div>' +
-          (lastLap !== null ? '<div class="pilot-last-time">' + formatTime(lastLap) + '</div>' : '') +
-        '</div>' +
-      '</div>' +
-      '<div class="pilot-card-actions">' +
-        '<button class="btn-lap" style="background:' + color + (canLap?'cc':'44') + '"' +
-          (canLap ? ' onclick="recordLap(\'' + pilot.id + '\')"' : ' disabled') + '>' +
-          (isDNF ? '🚫 DNF' : isFinished ? '🏁 Fini' : '⏱ Tour') +
-        '</button>' +
-        (currentRole === 'admin' ? '<button class="btn-penalty-open" onclick="openPenaltyModal(\'' + pilot.id + '\')">⚠️</button>' : '') +
+      '<div class="pilot-card-header">'+
+        '<div class="pilot-color-bar" style="background:'+color+'"></div>'+
+        '<div class="pilot-info">'+
+          '<div class="pilot-name">'+pilot.name+'</div>'+
+          '<div class="pilot-team">'+(team?team.name:'Sans équipe')+'</div>'+
+          badge+
+        '</div>'+
+        '<div class="pilot-lap-info">'+
+          '<div class="pilot-lap-count" style="color:'+color+'">'+lapCount+'</div>'+
+          '<div class="pilot-lap-label">/ '+state.maxLaps+' tours</div>'+
+          (lastLap!==null?'<div class="pilot-last-time">'+formatTime(lastLap)+'</div>':'')+
+        '</div>'+
+      '</div>'+
+      '<div class="pilot-card-actions">'+
+        '<button class="btn-lap" style="background:'+color+(canLap?'cc':'44')+'"'+
+          (canLap?' onclick="recordLap(\''+pilot.id+'\')"':' disabled')+'>'+
+          (isDNF?'🚫 DNF':isFinished?'🏁 Fini':'⏱ Tour')+
+        '</button>'+
+        (currentRole==='admin'?'<button class="btn-penalty-open" onclick="openPenaltyModal(\''+pilot.id+'\')">⚠️</button>':'')+
       '</div>';
     grid.appendChild(card);
   });
-  var maxDone = Math.max.apply(null, [0].concat(state.pilots.map(function(p){ return state.lapData[p.id] ? state.lapData[p.id].laps.length : 0; })));
-  document.getElementById('current-lap-display').textContent = Math.min(maxDone+1, state.maxLaps);
-  document.getElementById('max-laps-display').textContent    = state.maxLaps;
+  var maxDone = Math.max.apply(null,[0].concat(state.pilots.map(function(p){ return state.lapData[p.id]?state.lapData[p.id].laps.length:0; })));
+  document.getElementById('current-lap-display').textContent = Math.min(maxDone+1,state.maxLaps);
+  document.getElementById('max-laps-display').textContent = state.maxLaps;
 }
 
 // ===== RENDU RÉSULTATS =====
@@ -643,229 +664,161 @@ function renderResults() {
   var tbody = document.getElementById('results-tbody');
   tbody.innerHTML = '';
   var sorted = state.pilots.slice().sort(function(a,b) {
-    var da = state.lapData[a.id] || { laps:[], penalty:0, dnf:false };
-    var db = state.lapData[b.id] || { laps:[], penalty:0, dnf:false };
-    if (da.dnf && !db.dnf) return 1;
-    if (!da.dnf && db.dnf) return -1;
-    if (db.laps.length !== da.laps.length) return db.laps.length - da.laps.length;
-    return totalTime(da) - totalTime(db);
+    var da = state.lapData[a.id]||{laps:[],penalty:0,dnf:false};
+    var db = state.lapData[b.id]||{laps:[],penalty:0,dnf:false};
+    if (da.dnf&&!db.dnf) return 1; if (!da.dnf&&db.dnf) return -1;
+    if (db.laps.length!==da.laps.length) return db.laps.length-da.laps.length;
+    return totalTime(da)-totalTime(db);
   });
-  sorted.forEach(function(pilot, idx) {
-    var team  = state.teams.find(function(t){ return t.id === pilot.teamId; });
-    var color = team ? team.color : '#888';
-    var data  = state.lapData[pilot.id] || { laps:[], penalty:0, dnf:false };
-    var pos   = idx + 1;
-    var posClass = pos===1?'pos-1':pos===2?'pos-2':pos===3?'pos-3':'pos-other';
-    var best  = data.laps.length ? Math.min.apply(null, data.laps) : null;
-    var total = totalTime(data);
-    var statusHtml = data.dnf ? '<span class="status-dnf">DNF</span>'
-      : data.laps.length >= state.maxLaps ? '<span class="status-finished">Terminé</span>'
-      : '<span class="status-racing">En course</span>';
-    var tr = document.createElement('tr');
-    tr.innerHTML =
-      '<td><span class="pos-badge ' + posClass + '">' + (data.dnf?'—':pos) + '</span></td>' +
-      '<td style="font-weight:700">' + pilot.name + '</td>' +
-      '<td><span class="team-dot" style="background:' + color + '"></span>' + (team?team.name:'—') + '</td>' +
-      '<td>' + data.laps.length + ' / ' + state.maxLaps + '</td>' +
-      '<td style="font-family:\'Courier New\',monospace">' + (best!==null?formatTime(best):'—') + '</td>' +
-      '<td style="font-family:\'Courier New\',monospace;font-weight:700">' + (data.laps.length?formatTime(total):'—') + '</td>' +
-      '<td style="color:var(--orange)">' + (data.penalty>0?'+'+data.penalty/1000+'s':'—') + '</td>' +
-      '<td>' + statusHtml + '</td>';
+  sorted.forEach(function(pilot,idx) {
+    var team=state.teams.find(function(t){return t.id===pilot.teamId;}),color=team?team.color:'#888';
+    var data=state.lapData[pilot.id]||{laps:[],penalty:0,dnf:false};
+    var pos=idx+1,posClass=pos===1?'pos-1':pos===2?'pos-2':pos===3?'pos-3':'pos-other';
+    var best=data.laps.length?Math.min.apply(null,data.laps):null,total=totalTime(data);
+    var statusHtml=data.dnf?'<span class="status-dnf">DNF</span>':data.laps.length>=state.maxLaps?'<span class="status-finished">Terminé</span>':'<span class="status-racing">En course</span>';
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td><span class="pos-badge '+posClass+'">'+(data.dnf?'—':pos)+'</span></td>'+
+      '<td style="font-weight:700">'+pilot.name+'</td>'+
+      '<td><span class="team-dot" style="background:'+color+'"></span>'+(team?team.name:'—')+'</td>'+
+      '<td>'+data.laps.length+' / '+state.maxLaps+'</td>'+
+      '<td style="font-family:\'Courier New\',monospace">'+(best!==null?formatTime(best):'—')+'</td>'+
+      '<td style="font-family:\'Courier New\',monospace;font-weight:700">'+(data.laps.length?formatTime(total):'—')+'</td>'+
+      '<td style="color:var(--orange)">'+(data.penalty>0?'+'+data.penalty/1000+'s':'—')+'</td>'+
+      '<td>'+statusHtml+'</td>';
     tbody.appendChild(tr);
   });
   renderLapHistory();
 }
-
 function totalTime(data) {
   if (data.dnf) return Infinity;
-  return data.laps.reduce(function(a,b){ return a+b; }, 0) + (data.penalty||0);
+  return data.laps.reduce(function(a,b){return a+b;},0)+(data.penalty||0);
 }
-
 function renderLapHistory() {
-  var container = document.getElementById('lap-history');
-  container.innerHTML = '';
+  var container=document.getElementById('lap-history'); container.innerHTML='';
   state.pilots.forEach(function(pilot) {
-    var team  = state.teams.find(function(t){ return t.id === pilot.teamId; });
-    var color = team ? team.color : '#888';
-    var data  = state.lapData[pilot.id] || { laps:[] };
+    var team=state.teams.find(function(t){return t.id===pilot.teamId;}),color=team?team.color:'#888';
+    var data=state.lapData[pilot.id]||{laps:[]};
     if (!data.laps.length) return;
-    var best = Math.min.apply(null, data.laps);
-    var div  = document.createElement('div');
-    div.className = 'lap-history-pilot';
-    div.innerHTML =
-      '<div class="lap-history-pilot-header">' +
-        '<span class="team-dot" style="background:' + color + '"></span>' +
-        pilot.name +
-        (data.dnf ? '<span class="dnf-badge" style="margin-left:8px">DNF</span>' : '') +
-      '</div>' +
-      '<div class="lap-history-laps">' +
-        data.laps.map(function(t,i){ return '<span class="lap-chip' + (t===best?' best':'') + '">T'+(i+1)+': '+formatTime(t)+'</span>'; }).join('') +
-      '</div>';
+    var best=Math.min.apply(null,data.laps),div=document.createElement('div');
+    div.className='lap-history-pilot';
+    div.innerHTML='<div class="lap-history-pilot-header"><span class="team-dot" style="background:'+color+'"></span>'+pilot.name+(data.dnf?'<span class="dnf-badge" style="margin-left:8px">DNF</span>':'')+'</div>'+
+      '<div class="lap-history-laps">'+data.laps.map(function(t,i){return '<span class="lap-chip'+(t===best?' best':'')+'">T'+(i+1)+': '+formatTime(t)+'</span>';}).join('')+'</div>';
     container.appendChild(div);
   });
 }
 
 // ===== SETTINGS =====
 function applyLaps() {
-  var val = parseInt(document.getElementById('setting-laps').value);
-  if (val >= 1 && val <= 99) { state.maxLaps = val; saveState(); renderAll(); showToast('Tours : ' + val); }
+  var val=parseInt(document.getElementById('setting-laps').value);
+  if (val>=1&&val<=99){state.maxLaps=val;saveState();renderAll();showToast('Tours : '+val);}
 }
-
-function changePassword() {
-  var val = document.getElementById('setting-password').value.trim();
-  if (val.length < 3) { showToast('Min 3 caractères'); return; }
-  state.adminPassword = val; saveState();
-  document.getElementById('setting-password').value = '';
-  renderPasswordDisplay(); showToast('MDP admin mis à jour');
+function regenCodes() {
+  state.adminCode=generateCode(); state.spectatorCode=generateCode();
+  saveState(); renderPasswordDisplay(); showToast('Nouveaux codes générés');
 }
-
-function changeSpectatorPassword() {
-  var val = document.getElementById('setting-spectator-password').value.trim();
-  if (val.length < 3) { showToast('Min 3 caractères'); return; }
-  state.spectatorPassword = val; saveState();
-  document.getElementById('setting-spectator-password').value = '';
-  renderPasswordDisplay(); showToast('MDP spectateur mis à jour');
+function togglePasswordDisplay(spanId,btn) {
+  var span=document.getElementById(spanId);
+  if (span.dataset.hidden==='true'){span.textContent=span.dataset.value;span.dataset.hidden='false';btn.textContent='🙈';}
+  else{span.dataset.value=span.textContent;span.textContent='••••••';span.dataset.hidden='true';btn.textContent='👁';}
 }
-
-function regenAdminPassword() {
-  state.adminPassword = generatePassword(); saveState(); renderPasswordDisplay(); showToast('Nouveau MDP admin généré');
-}
-
-function regenSpectatorPassword() {
-  state.spectatorPassword = generatePassword(); saveState(); renderPasswordDisplay(); showToast('Nouveau MDP spectateur généré');
-}
-
-function togglePasswordDisplay(spanId, btn) {
-  var span = document.getElementById(spanId);
-  if (span.dataset.hidden === 'true') {
-    span.textContent = span.dataset.value; span.dataset.hidden = 'false'; btn.textContent = '🙈';
-  } else {
-    span.dataset.value = span.textContent; span.textContent = '••••••••'; span.dataset.hidden = 'true'; btn.textContent = '👁';
-  }
-}
-
 function renderPasswordDisplay() {
-  var a = document.getElementById('current-admin-pass');
-  var s = document.getElementById('current-spectator-pass');
-  if (a) { a.dataset.value = state.adminPassword;     a.textContent = '••••••••'; a.dataset.hidden = 'true'; }
-  if (s) { s.dataset.value = state.spectatorPassword; s.textContent = '••••••••'; s.dataset.hidden = 'true'; }
-  document.querySelectorAll('.btn-eye').forEach(function(b){ b.textContent = '👁'; });
+  var a=document.getElementById('current-admin-pass'),s=document.getElementById('current-spectator-pass');
+  if(a){a.dataset.value=state.adminCode;a.textContent='••••••';a.dataset.hidden='true';}
+  if(s){s.dataset.value=state.spectatorCode;s.textContent='••••••';s.dataset.hidden='true';}
+  document.querySelectorAll('.btn-eye').forEach(function(b){b.textContent='👁';});
 }
 
 // ===== ÉQUIPES =====
-function selectTeamColor(color, btn) {
-  selectedTeamColorValue = color;
-  document.querySelectorAll('.color-swatch').forEach(function(s){ s.classList.remove('active'); });
+function selectTeamColor(color,btn) {
+  selectedTeamColorValue=color;
+  document.querySelectorAll('.color-swatch').forEach(function(s){s.classList.remove('active');});
   btn.classList.add('active');
 }
-
 function addTeam() {
-  var name = document.getElementById('new-team-name').value.trim();
-  if (!name) { showToast('Entrez un nom'); return; }
-  if (state.teams.length >= 10) { showToast('Max 10 équipes'); return; }
-  state.teams.push({ id:'t'+Date.now(), name:name, color:selectedTeamColorValue });
-  document.getElementById('new-team-name').value = '';
-  saveState(); renderTeamsList(); renderPilotTeamSelect();
-  showToast('Équipe "' + name + '" ajoutée');
+  var name=document.getElementById('new-team-name').value.trim();
+  if (!name){showToast('Entrez un nom');return;}
+  if (state.teams.length>=10){showToast('Max 10 équipes');return;}
+  state.teams.push({id:'t'+Date.now(),name:name,color:selectedTeamColorValue});
+  document.getElementById('new-team-name').value='';
+  saveState();renderTeamsList();renderPilotTeamSelect();showToast('Équipe "'+name+'" ajoutée');
 }
-
 function deleteTeam(id) {
-  state.teams  = state.teams.filter(function(t){ return t.id !== id; });
-  state.pilots = state.pilots.filter(function(p){ return p.teamId !== id; });
-  initLapData(); saveState();
-  renderTeamsList(); renderPilotsList(); renderPilotTeamSelect(); renderPilots();
+  state.teams=state.teams.filter(function(t){return t.id!==id;});
+  state.pilots=state.pilots.filter(function(p){return p.teamId!==id;});
+  initLapData();saveState();renderTeamsList();renderPilotsList();renderPilotTeamSelect();renderPilots();
 }
-
 function renderTeamsList() {
-  var list = document.getElementById('teams-list');
-  list.innerHTML = '';
+  var list=document.getElementById('teams-list'); list.innerHTML='';
   state.teams.forEach(function(team) {
-    var div = document.createElement('div');
-    div.className = 'team-item';
-    div.innerHTML = '<span class="team-color-dot" style="background:' + team.color + '"></span>' +
-      '<span class="team-item-name">' + team.name + '</span>' +
-      '<button class="btn-delete" onclick="deleteTeam(\'' + team.id + '\')">✕</button>';
+    var div=document.createElement('div'); div.className='team-item';
+    div.innerHTML='<span class="team-color-dot" style="background:'+team.color+'"></span>'+
+      '<span class="team-item-name">'+team.name+'</span>'+
+      '<button class="btn-delete" onclick="deleteTeam(\''+team.id+'\')">✕</button>';
     list.appendChild(div);
   });
 }
 
 // ===== PILOTES =====
 function addPilot() {
-  var name   = document.getElementById('new-pilot-name').value.trim();
-  var teamId = document.getElementById('new-pilot-team').value;
-  if (!name)   { showToast('Entrez un nom'); return; }
-  if (!teamId) { showToast('Sélectionnez une équipe'); return; }
-  var id = 'p' + Date.now();
-  state.pilots.push({ id:id, name:name, teamId:teamId });
-  state.lapData[id] = { laps:[], penalty:0, dnf:false, lapStartTime:0 };
-  document.getElementById('new-pilot-name').value = '';
-  saveState(); renderPilotsList(); renderPilots();
-  showToast('Pilote "' + name + '" ajouté');
+  var name=document.getElementById('new-pilot-name').value.trim();
+  var teamId=document.getElementById('new-pilot-team').value;
+  if (!name){showToast('Entrez un nom');return;}
+  if (!teamId){showToast('Sélectionnez une équipe');return;}
+  var id='p'+Date.now();
+  state.pilots.push({id:id,name:name,teamId:teamId});
+  state.lapData[id]={laps:[],penalty:0,dnf:false,lapStartTime:0};
+  document.getElementById('new-pilot-name').value='';
+  saveState();renderPilotsList();renderPilots();showToast('Pilote "'+name+'" ajouté');
 }
-
 function deletePilot(id) {
-  state.pilots = state.pilots.filter(function(p){ return p.id !== id; });
-  delete state.lapData[id];
-  saveState(); renderPilotsList(); renderPilots();
+  state.pilots=state.pilots.filter(function(p){return p.id!==id;});
+  delete state.lapData[id];saveState();renderPilotsList();renderPilots();
 }
-
 function renderPilotsList() {
-  var list = document.getElementById('pilots-list');
-  list.innerHTML = '';
+  var list=document.getElementById('pilots-list'); list.innerHTML='';
   state.pilots.forEach(function(pilot) {
-    var team  = state.teams.find(function(t){ return t.id === pilot.teamId; });
-    var color = team ? team.color : '#888';
-    var div   = document.createElement('div');
-    div.className = 'pilot-item';
-    div.innerHTML = '<span class="team-color-dot" style="background:' + color + '"></span>' +
-      '<span class="pilot-item-name">' + pilot.name + '</span>' +
-      '<span class="pilot-item-team">' + (team?team.name:'—') + '</span>' +
-      '<button class="btn-delete" onclick="deletePilot(\'' + pilot.id + '\')">✕</button>';
+    var team=state.teams.find(function(t){return t.id===pilot.teamId;}),color=team?team.color:'#888';
+    var div=document.createElement('div'); div.className='pilot-item';
+    div.innerHTML='<span class="team-color-dot" style="background:'+color+'"></span>'+
+      '<span class="pilot-item-name">'+pilot.name+'</span>'+
+      '<span class="pilot-item-team">'+(team?team.name:'—')+'</span>'+
+      '<button class="btn-delete" onclick="deletePilot(\''+pilot.id+'\')">✕</button>';
     list.appendChild(div);
   });
 }
-
 function renderPilotTeamSelect() {
-  var sel = document.getElementById('new-pilot-team');
-  sel.innerHTML = '<option value="">-- Équipe --</option>';
-  state.teams.forEach(function(team) {
-    var opt = document.createElement('option');
-    opt.value = team.id; opt.textContent = team.name;
-    sel.appendChild(opt);
-  });
+  var sel=document.getElementById('new-pilot-team');
+  sel.innerHTML='<option value="">-- Équipe --</option>';
+  state.teams.forEach(function(team){var opt=document.createElement('option');opt.value=team.id;opt.textContent=team.name;sel.appendChild(opt);});
 }
 
 // ===== RENDER ALL =====
 function renderAll() {
   renderPilots(); renderResults();
-  if (currentRole === 'admin') {
-    renderTeamsList(); renderPilotsList(); renderPilotTeamSelect(); renderPasswordDisplay();
-    document.getElementById('setting-laps').value = state.maxLaps;
+  if (currentRole==='admin') {
+    renderTeamsList();renderPilotsList();renderPilotTeamSelect();renderPasswordDisplay();
+    document.getElementById('setting-laps').value=state.maxLaps;
   }
-  document.getElementById('max-laps-display').textContent = state.maxLaps;
+  document.getElementById('max-laps-display').textContent=state.maxLaps;
 }
 
 // ===== TOAST =====
-var toastTimeout = null;
+var toastTimeout=null;
 function showToast(msg) {
-  var t = document.querySelector('.toast');
-  if (!t) { t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t); }
-  t.textContent = msg; t.classList.add('show');
+  var t=document.querySelector('.toast');
+  if (!t){t=document.createElement('div');t.className='toast';document.body.appendChild(t);}
+  t.textContent=msg;t.classList.add('show');
   if (toastTimeout) clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(function(){ t.classList.remove('show'); }, 2500);
+  toastTimeout=setTimeout(function(){t.classList.remove('show');},2500);
 }
 
 // ===== ANTI-SCROLL MOBILE =====
-document.addEventListener('touchend', function(e) {
-  if (e.target.tagName === 'BUTTON') e.preventDefault();
-}, { passive: false });
+document.addEventListener('touchend',function(e){if(e.target.tagName==='BUTTON')e.preventDefault();},{passive:false});
 
-// ===== INIT =====
-document.getElementById('login-password').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') confirmLogin();
-});
+// ===== ENTRÉE AVEC TOUCHE ENTRÉE =====
+document.getElementById('join-code-input').addEventListener('keydown',function(e){if(e.key==='Enter')joinSession();});
 
-// Restaurer session
+// ===== INIT : RESTAURER SESSION =====
 var savedRole = loadSession();
 if (savedRole) {
   currentRole = savedRole;
