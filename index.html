@@ -256,7 +256,7 @@ body.is-admin .tab.admin-only{display:block!important}
     <div class="results-header"><h2>📊 Résultats en direct</h2></div>
     <div id="results-table-container">
       <table class="results-table">
-        <thead><tr><th>Pos.</th><th>Pilote</th><th>Équipe</th><th>Tours</th><th>Meilleur</th><th>Total</th><th>Pénalité</th><th>Statut</th></tr></thead>
+        <thead><tr><th>Pos.</th><th>Équipe</th><th>Tours</th><th>Meilleur</th><th>Total</th><th>Pénalité</th><th>Statut</th></tr></thead>
         <tbody id="results-tbody"></tbody>
       </table>
     </div>
@@ -298,29 +298,20 @@ body.is-admin .tab.admin-only{display:block!important}
     </div>
     <div class="settings-section">
       <h2>🏁 Équipes</h2>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Clique sur une couleur pour ajouter une équipe</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Clique sur une couleur pour ajouter une équipe (doublons autorisés)</p>
       <div class="color-picker-group">
-        <button class="color-swatch-add" style="background:#e74c3c" onclick="addTeamByColor('#e74c3c','Rouge',this)" title="Rouge"></button>
-        <button class="color-swatch-add" style="background:#3498db" onclick="addTeamByColor('#3498db','Bleu',this)" title="Bleu"></button>
-        <button class="color-swatch-add" style="background:#2ecc71" onclick="addTeamByColor('#2ecc71','Vert',this)" title="Vert"></button>
-        <button class="color-swatch-add" style="background:#f39c12" onclick="addTeamByColor('#f39c12','Orange',this)" title="Orange"></button>
-        <button class="color-swatch-add" style="background:#9b59b6" onclick="addTeamByColor('#9b59b6','Violet',this)" title="Violet"></button>
-        <button class="color-swatch-add" style="background:#1abc9c" onclick="addTeamByColor('#1abc9c','Turquoise',this)" title="Turquoise"></button>
-        <button class="color-swatch-add" style="background:#e67e22" onclick="addTeamByColor('#e67e22','Marron',this)" title="Marron"></button>
-        <button class="color-swatch-add" style="background:#ecf0f1" onclick="addTeamByColor('#ecf0f1','Blanc',this)" title="Blanc"></button>
-        <button class="color-swatch-add" style="background:#e91e8c" onclick="addTeamByColor('#e91e8c','Rose',this)" title="Rose"></button>
-        <button class="color-swatch-add" style="background:#ffeb3b" onclick="addTeamByColor('#ffeb3b','Jaune',this)" title="Jaune"></button>
+        <button class="color-swatch-add" style="background:#e74c3c" onclick="addTeamByColor('#e74c3c','Rouge')" title="Rouge"></button>
+        <button class="color-swatch-add" style="background:#3498db" onclick="addTeamByColor('#3498db','Bleu')" title="Bleu"></button>
+        <button class="color-swatch-add" style="background:#2ecc71" onclick="addTeamByColor('#2ecc71','Vert')" title="Vert"></button>
+        <button class="color-swatch-add" style="background:#f39c12" onclick="addTeamByColor('#f39c12','Orange')" title="Orange"></button>
+        <button class="color-swatch-add" style="background:#9b59b6" onclick="addTeamByColor('#9b59b6','Violet')" title="Violet"></button>
+        <button class="color-swatch-add" style="background:#1abc9c" onclick="addTeamByColor('#1abc9c','Turquoise')" title="Turquoise"></button>
+        <button class="color-swatch-add" style="background:#e67e22" onclick="addTeamByColor('#e67e22','Marron')" title="Marron"></button>
+        <button class="color-swatch-add" style="background:#ecf0f1" onclick="addTeamByColor('#ecf0f1','Blanc')" title="Blanc"></button>
+        <button class="color-swatch-add" style="background:#e91e8c" onclick="addTeamByColor('#e91e8c','Rose')" title="Rose"></button>
+        <button class="color-swatch-add" style="background:#ffeb3b" onclick="addTeamByColor('#ffeb3b','Jaune')" title="Jaune"></button>
       </div>
       <div id="teams-list" class="teams-list"></div>
-    </div>
-    <div class="settings-section">
-      <h2>👤 Pilotes</h2>
-      <div class="setting-row">
-        <input type="text" id="new-pilot-name" placeholder="Nom du pilote"/>
-        <select id="new-pilot-team"><option value="">-- Équipe --</option></select>
-        <button class="btn-add" onclick="addPilot()">+ Ajouter</button>
-      </div>
-      <div id="pilots-list" class="pilots-list"></div>
     </div>
   </div>
 </div>
@@ -366,16 +357,7 @@ function defaultState() {
     raceRunning: false,
     raceFinished: false,
     raceElapsed: 0,
-    teams: [
-      { id:'t1', name:'Équipe Rouge', color:'#e74c3c' },
-      { id:'t2', name:'Équipe Bleue', color:'#3498db' },
-      { id:'t3', name:'Équipe Verte', color:'#2ecc71' }
-    ],
-    pilots: [
-      { id:'p1', name:'Pilote 1', teamId:'t1' },
-      { id:'p2', name:'Pilote 2', teamId:'t2' },
-      { id:'p3', name:'Pilote 3', teamId:'t3' }
-    ],
+    teams: [],
     lapData: {}
   };
 }
@@ -387,6 +369,10 @@ function loadState() {
       var s = JSON.parse(raw);
       if (!s.spectatorCode) s.spectatorCode = generateCode();
       if (!s.adminCode)     s.adminCode     = generateCode();
+      if (!s.teams)         s.teams         = [];
+      if (!s.lapData)       s.lapData       = {};
+      // Migration: supprimer les pilotes si présents
+      delete s.pilots;
       return s;
     }
   } catch(e) {}
@@ -557,25 +543,27 @@ function formatTime(ms) {
 function pad(n) { return String(n).padStart(2,'0'); }
 
 // ===== TOURS =====
+
 function initLapData() {
-  state.pilots.forEach(function(p) {
-    if (!state.lapData[p.id]) state.lapData[p.id] = { laps:[], penalty:0, dnf:false, lapStartTime:0 };
+  state.teams.forEach(function(t) {
+    if (!state.lapData[t.id]) state.lapData[t.id] = { laps:[], penalty:0, dnf:false, lapStartTime:0 };
   });
 }
-function recordLap(pilotId) {
+function recordLap(teamId) {
   if (!state.raceRunning) { showToast('La course n\'est pas démarrée'); return; }
-  var data = state.lapData[pilotId];
+  var data = state.lapData[teamId];
   if (!data || data.dnf) return;
   var lapTime = raceElapsed - (data.lapStartTime || 0);
   data.laps.push(lapTime); data.lapStartTime = raceElapsed;
-  var pilot = state.pilots.find(function(p){ return p.id === pilotId; });
-  showToast(pilot.name + ' — Tour ' + data.laps.length + ': ' + formatTime(lapTime));
+  var team = state.teams.find(function(t){ return t.id === teamId; });
+  showToast(team.name + ' — Tour ' + data.laps.length + ': ' + formatTime(lapTime));
   if (data.laps.length >= state.maxLaps) checkRaceFinished();
-  saveState(); renderPilots(); renderResults();
+  saveState(); renderCards(); renderResults();
 }
 function checkRaceFinished() {
-  var active  = state.pilots.filter(function(p){ return !state.lapData[p.id].dnf; });
-  var allDone = active.every(function(p){ return (state.lapData[p.id].laps.length||0) >= state.maxLaps; });
+  var active = state.teams.filter(function(t){ return !(state.lapData[t.id] && state.lapData[t.id].dnf); });
+  if (!active.length) return;
+  var allDone = active.every(function(t){ return state.lapData[t.id] && state.lapData[t.id].laps.length >= state.maxLaps; });
   if (allDone) {
     state.raceFinished = true; state.raceRunning = false;
     stopTimer(); saveState(); setStatus('🏁 Terminée'); setRaceButtons(true); showToast('🏁 Course terminée !');
@@ -583,11 +571,11 @@ function checkRaceFinished() {
 }
 
 // ===== PÉNALITÉ / DNF =====
-function openPenaltyModal(pilotId) {
+function openPenaltyModal(teamId) {
   if (currentRole !== 'admin') return;
-  penaltyTargetId = pilotId;
-  var pilot = state.pilots.find(function(p){ return p.id === pilotId; });
-  document.getElementById('penalty-pilot-name').textContent = pilot.name;
+  penaltyTargetId = teamId;
+  var team = state.teams.find(function(t){ return t.id === teamId; });
+  document.getElementById('penalty-pilot-name').textContent = team.name;
   document.getElementById('penalty-seconds').value = 5;
   document.getElementById('penalty-modal').style.display = 'flex';
 }
@@ -596,30 +584,31 @@ function applyPenalty() {
   if (!penaltyTargetId) return;
   var secs = parseInt(document.getElementById('penalty-seconds').value) || 0;
   state.lapData[penaltyTargetId].penalty = (state.lapData[penaltyTargetId].penalty||0) + secs*1000;
-  var pilot = state.pilots.find(function(p){ return p.id === penaltyTargetId; });
-  showToast('+'+secs+'s — '+pilot.name);
-  saveState(); closePenaltyModal(); renderPilots(); renderResults();
+  var team = state.teams.find(function(t){ return t.id === penaltyTargetId; });
+  showToast('+'+secs+'s — '+team.name);
+  saveState(); closePenaltyModal(); renderCards(); renderResults();
 }
 function applyDNF() {
   if (!penaltyTargetId) return;
   state.lapData[penaltyTargetId].dnf = true;
-  var pilot = state.pilots.find(function(p){ return p.id === penaltyTargetId; });
-  showToast('🚫 DNF — '+pilot.name);
-  saveState(); closePenaltyModal(); checkRaceFinished(); renderPilots(); renderResults();
+  var team = state.teams.find(function(t){ return t.id === penaltyTargetId; });
+  showToast('🚫 DNF — '+team.name);
+  saveState(); closePenaltyModal(); checkRaceFinished(); renderCards(); renderResults();
 }
 
-// ===== RENDU PILOTES =====
-function renderPilots() {
+// ===== CARTES ÉQUIPES (chrono) =====
+function renderCards() {
   var grid = document.getElementById('pilots-grid');
   grid.innerHTML = '';
-  if (!state.pilots.length) {
-    grid.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">Aucun pilote — allez dans ⚙️ Config</p>';
+  if (!state.teams.length) {
+    grid.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">Aucune équipe — allez dans ⚙️ Config</p>';
+    document.getElementById('current-lap-display').textContent = '—';
+    document.getElementById('max-laps-display').textContent = state.maxLaps;
     return;
   }
-  state.pilots.forEach(function(pilot) {
-    var team = state.teams.find(function(t){ return t.id === pilot.teamId; });
-    var color = team ? team.color : '#888';
-    var data = state.lapData[pilot.id] || { laps:[], penalty:0, dnf:false };
+  state.teams.forEach(function(team) {
+    var color = team.color;
+    var data = state.lapData[team.id] || { laps:[], penalty:0, dnf:false };
     var lapCount = data.laps.length;
     var lastLap = lapCount > 0 ? data.laps[lapCount-1] : null;
     var isDNF = data.dnf, isFinished = lapCount >= state.maxLaps;
@@ -630,57 +619,55 @@ function renderPilots() {
     else if (data.penalty > 0) badge = '<span class="pilot-penalty-badge">+'+(data.penalty/1000)+'s pén.</span>';
     var card = document.createElement('div');
     card.className = 'pilot-card' + (isDNF ? ' dnf' : '');
-    card.style.background = 'linear-gradient(135deg,'+color+'18,'+color+'08)';
-    card.style.borderColor = isDNF ? '#ff444444' : color+'44';
+    card.style.background = 'linear-gradient(135deg,'+color+'30,'+color+'10)';
+    card.style.borderColor = isDNF ? '#ff444466' : color;
     card.innerHTML =
       '<div class="pilot-card-header">'+
-        '<div class="pilot-color-bar" style="background:'+color+'"></div>'+
+        '<div style="width:12px;height:52px;border-radius:6px;background:'+color+';flex-shrink:0"></div>'+
         '<div class="pilot-info">'+
-          '<div class="pilot-name">'+pilot.name+'</div>'+
-          '<div class="pilot-team">'+(team?team.name:'Sans équipe')+'</div>'+
+          '<div class="pilot-name" style="color:'+color+';font-size:18px">'+team.name+'</div>'+
           badge+
         '</div>'+
         '<div class="pilot-lap-info">'+
-          '<div class="pilot-lap-count" style="color:'+color+'">'+lapCount+'</div>'+
+          '<div class="pilot-lap-count" style="color:'+color+';font-size:28px">'+lapCount+'</div>'+
           '<div class="pilot-lap-label">/ '+state.maxLaps+' tours</div>'+
           (lastLap!==null?'<div class="pilot-last-time">'+formatTime(lastLap)+'</div>':'')+
         '</div>'+
       '</div>'+
       '<div class="pilot-card-actions">'+
-        '<button class="btn-lap" style="background:'+color+(canLap?'cc':'44')+'"'+
-          (canLap?' onclick="recordLap(\''+pilot.id+'\')"':' disabled')+'>'+
-          (isDNF?'🚫 DNF':isFinished?'🏁 Fini':'⏱ Tour')+
+        '<button class="btn-lap" style="background:'+color+';font-size:16px;padding:18px;opacity:'+(canLap?'1':'.4')+'"'+
+          (canLap?' onclick="recordLap(\''+team.id+'\')"':' disabled')+'>'+
+          (isDNF?'🚫 DNF':isFinished?'🏁 Fini':'⏱ Enregistrer tour')+
         '</button>'+
-        (currentRole==='admin'?'<button class="btn-penalty-open" onclick="openPenaltyModal(\''+pilot.id+'\')">⚠️</button>':'')+
+        (currentRole==='admin'?'<button class="btn-penalty-open" onclick="openPenaltyModal(\''+team.id+'\')">⚠️</button>':'')+
       '</div>';
     grid.appendChild(card);
   });
-  var maxDone = Math.max.apply(null,[0].concat(state.pilots.map(function(p){ return state.lapData[p.id]?state.lapData[p.id].laps.length:0; })));
+  var maxDone = Math.max.apply(null,[0].concat(state.teams.map(function(t){ return state.lapData[t.id]?state.lapData[t.id].laps.length:0; })));
   document.getElementById('current-lap-display').textContent = Math.min(maxDone+1,state.maxLaps);
   document.getElementById('max-laps-display').textContent = state.maxLaps;
 }
 
-// ===== RENDU RÉSULTATS =====
+// ===== RÉSULTATS =====
 function renderResults() {
   var tbody = document.getElementById('results-tbody');
   tbody.innerHTML = '';
-  var sorted = state.pilots.slice().sort(function(a,b) {
+  var sorted = state.teams.slice().sort(function(a,b) {
     var da = state.lapData[a.id]||{laps:[],penalty:0,dnf:false};
     var db = state.lapData[b.id]||{laps:[],penalty:0,dnf:false};
     if (da.dnf&&!db.dnf) return 1; if (!da.dnf&&db.dnf) return -1;
     if (db.laps.length!==da.laps.length) return db.laps.length-da.laps.length;
     return totalTime(da)-totalTime(db);
   });
-  sorted.forEach(function(pilot,idx) {
-    var team=state.teams.find(function(t){return t.id===pilot.teamId;}),color=team?team.color:'#888';
-    var data=state.lapData[pilot.id]||{laps:[],penalty:0,dnf:false};
+  sorted.forEach(function(team,idx) {
+    var color = team.color;
+    var data = state.lapData[team.id]||{laps:[],penalty:0,dnf:false};
     var pos=idx+1,posClass=pos===1?'pos-1':pos===2?'pos-2':pos===3?'pos-3':'pos-other';
     var best=data.laps.length?Math.min.apply(null,data.laps):null,total=totalTime(data);
     var statusHtml=data.dnf?'<span class="status-dnf">DNF</span>':data.laps.length>=state.maxLaps?'<span class="status-finished">Terminé</span>':'<span class="status-racing">En course</span>';
     var tr=document.createElement('tr');
     tr.innerHTML='<td><span class="pos-badge '+posClass+'">'+(data.dnf?'—':pos)+'</span></td>'+
-      '<td style="font-weight:700">'+pilot.name+'</td>'+
-      '<td><span class="team-dot" style="background:'+color+'"></span>'+(team?team.name:'—')+'</td>'+
+      '<td><span class="team-dot" style="background:'+color+'"></span><strong style="color:'+color+'">'+team.name+'</strong></td>'+
       '<td>'+data.laps.length+' / '+state.maxLaps+'</td>'+
       '<td style="font-family:\'Courier New\',monospace">'+(best!==null?formatTime(best):'—')+'</td>'+
       '<td style="font-family:\'Courier New\',monospace;font-weight:700">'+(data.laps.length?formatTime(total):'—')+'</td>'+
@@ -696,13 +683,12 @@ function totalTime(data) {
 }
 function renderLapHistory() {
   var container=document.getElementById('lap-history'); container.innerHTML='';
-  state.pilots.forEach(function(pilot) {
-    var team=state.teams.find(function(t){return t.id===pilot.teamId;}),color=team?team.color:'#888';
-    var data=state.lapData[pilot.id]||{laps:[]};
+  state.teams.forEach(function(team) {
+    var data=state.lapData[team.id]||{laps:[]};
     if (!data.laps.length) return;
     var best=Math.min.apply(null,data.laps),div=document.createElement('div');
     div.className='lap-history-pilot';
-    div.innerHTML='<div class="lap-history-pilot-header"><span class="team-dot" style="background:'+color+'"></span>'+pilot.name+(data.dnf?'<span class="dnf-badge" style="margin-left:8px">DNF</span>':'')+'</div>'+
+    div.innerHTML='<div class="lap-history-pilot-header"><span class="team-dot" style="background:'+team.color+'"></span><span style="color:'+team.color+'">'+team.name+'</span>'+(data.dnf?'<span class="dnf-badge" style="margin-left:8px">DNF</span>':'')+'</div>'+
       '<div class="lap-history-laps">'+data.laps.map(function(t,i){return '<span class="lap-chip'+(t===best?' best':'')+'">T'+(i+1)+': '+formatTime(t)+'</span>';}).join('')+'</div>';
     container.appendChild(div);
   });
@@ -730,82 +716,38 @@ function renderPasswordDisplay() {
 }
 
 // ===== ÉQUIPES =====
-function addTeamByColor(color, name, btn) {
-  // Vérifier si cette couleur est déjà utilisée
-  var exists = state.teams.find(function(t){ return t.color === color; });
-  if (exists) { showToast('Cette couleur est déjà utilisée'); return; }
+function addTeamByColor(color, name) {
   if (state.teams.length >= 10) { showToast('Max 10 équipes'); return; }
-  state.teams.push({ id:'t'+Date.now(), name:name, color:color });
-  saveState(); renderTeamsList(); renderPilotTeamSelect();
-  showToast('Équipe ' + name + ' ajoutée');
-  updateColorSwatches();
+  var count = state.teams.filter(function(t){ return t.color === color; }).length;
+  var label = count > 0 ? name + ' ' + (count+1) : name;
+  var newId = 't' + Date.now();
+  state.teams.push({ id:newId, name:label, color:color });
+  state.lapData[newId] = { laps:[], penalty:0, dnf:false, lapStartTime:0 };
+  saveState(); renderTeamsList(); renderCards();
+  showToast('Équipe ' + label + ' ajoutée');
 }
 function deleteTeam(id) {
-  state.teams=state.teams.filter(function(t){return t.id!==id;});
-  state.pilots=state.pilots.filter(function(p){return p.teamId!==id;});
-  initLapData();saveState();renderTeamsList();renderPilotsList();renderPilotTeamSelect();renderPilots();
-  updateColorSwatches();
-}
-function updateColorSwatches() {
-  var usedColors = state.teams.map(function(t){ return t.color; });
-  document.querySelectorAll('.color-swatch-add').forEach(function(btn) {
-    var c = btn.style.background;
-    if (usedColors.indexOf(c) !== -1) btn.classList.add('used');
-    else btn.classList.remove('used');
-  });
+  state.teams = state.teams.filter(function(t){ return t.id !== id; });
+  delete state.lapData[id];
+  saveState(); renderTeamsList(); renderCards(); renderResults();
 }
 function renderTeamsList() {
   var list=document.getElementById('teams-list'); list.innerHTML='';
   state.teams.forEach(function(team) {
     var div=document.createElement('div'); div.className='team-item';
-    div.innerHTML='<span class="team-color-dot" style="background:'+team.color+'"></span>'+
-      '<span class="team-item-name">'+team.name+'</span>'+
+    div.innerHTML='<span class="team-color-dot" style="background:'+team.color+';width:20px;height:20px"></span>'+
+      '<span class="team-item-name" style="color:'+team.color+'">'+team.name+'</span>'+
       '<button class="btn-delete" onclick="deleteTeam(\''+team.id+'\')">✕</button>';
     list.appendChild(div);
   });
 }
 
-// ===== PILOTES =====
-function addPilot() {
-  var name=document.getElementById('new-pilot-name').value.trim();
-  var teamId=document.getElementById('new-pilot-team').value;
-  if (!name){showToast('Entrez un nom');return;}
-  if (!teamId){showToast('Sélectionnez une équipe');return;}
-  var id='p'+Date.now();
-  state.pilots.push({id:id,name:name,teamId:teamId});
-  state.lapData[id]={laps:[],penalty:0,dnf:false,lapStartTime:0};
-  document.getElementById('new-pilot-name').value='';
-  saveState();renderPilotsList();renderPilots();showToast('Pilote "'+name+'" ajouté');
-}
-function deletePilot(id) {
-  state.pilots=state.pilots.filter(function(p){return p.id!==id;});
-  delete state.lapData[id];saveState();renderPilotsList();renderPilots();
-}
-function renderPilotsList() {
-  var list=document.getElementById('pilots-list'); list.innerHTML='';
-  state.pilots.forEach(function(pilot) {
-    var team=state.teams.find(function(t){return t.id===pilot.teamId;}),color=team?team.color:'#888';
-    var div=document.createElement('div'); div.className='pilot-item';
-    div.innerHTML='<span class="team-color-dot" style="background:'+color+'"></span>'+
-      '<span class="pilot-item-name">'+pilot.name+'</span>'+
-      '<span class="pilot-item-team">'+(team?team.name:'—')+'</span>'+
-      '<button class="btn-delete" onclick="deletePilot(\''+pilot.id+'\')">✕</button>';
-    list.appendChild(div);
-  });
-}
-function renderPilotTeamSelect() {
-  var sel=document.getElementById('new-pilot-team');
-  sel.innerHTML='<option value="">-- Équipe --</option>';
-  state.teams.forEach(function(team){var opt=document.createElement('option');opt.value=team.id;opt.textContent=team.name;sel.appendChild(opt);});
-}
-
 // ===== RENDER ALL =====
 function renderAll() {
-  renderPilots(); renderResults();
+  renderCards(); renderResults();
   if (currentRole==='admin') {
-    renderTeamsList();renderPilotsList();renderPilotTeamSelect();renderPasswordDisplay();
+    renderTeamsList(); renderPasswordDisplay();
     document.getElementById('setting-laps').value=state.maxLaps;
-    updateColorSwatches();
   }
   document.getElementById('max-laps-display').textContent=state.maxLaps;
 }
@@ -823,15 +765,12 @@ function showToast(msg) {
 // ===== ANTI-SCROLL MOBILE =====
 document.addEventListener('touchend',function(e){if(e.target.tagName==='BUTTON')e.preventDefault();},{passive:false});
 
-// ===== ENTRÉE AVEC TOUCHE ENTRÉE =====
+// ===== TOUCHE ENTRÉE =====
 document.getElementById('join-code-input').addEventListener('keydown',function(e){if(e.key==='Enter')joinSession();});
 
-// ===== INIT : RESTAURER SESSION =====
+// ===== INIT =====
 var savedRole = loadSession();
-if (savedRole) {
-  currentRole = savedRole;
-  startApp();
-}
+if (savedRole) { currentRole = savedRole; startApp(); }
 </script>
 </body>
 </html>
