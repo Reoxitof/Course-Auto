@@ -298,7 +298,7 @@ body.is-admin .tab.admin-only{display:block!important}
     </div>
     <div class="settings-section">
       <h2>🏁 Équipes</h2>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Clique sur une couleur pour ajouter une équipe (doublons autorisés)</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Clique sur une couleur pour ajouter une équipe (max 50, doublons autorisés)</p>
       <div class="color-picker-group">
         <button class="color-swatch-add" style="background:#e74c3c" onclick="addTeamByColor('#e74c3c','Rouge')" title="Rouge"></button>
         <button class="color-swatch-add" style="background:#3498db" onclick="addTeamByColor('#3498db','Bleu')" title="Bleu"></button>
@@ -717,7 +717,7 @@ function renderPasswordDisplay() {
 
 // ===== ÉQUIPES =====
 function addTeamByColor(color, name) {
-  if (state.teams.length >= 10) { showToast('Max 10 équipes'); return; }
+  if (state.teams.length >= 50) { showToast('Max 50 équipes'); return; }
   var count = state.teams.filter(function(t){ return t.color === color; }).length;
   var label = count > 0 ? name + ' ' + (count+1) : name;
   var newId = 't' + Date.now();
