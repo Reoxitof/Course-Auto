@@ -366,8 +366,9 @@ body.is-admin .tab.admin-only{display:block!important}
 
 <script>
 // ===== CONSTANTES =====
-var SESSION_KEY = 'race_session'; var SESSION_ID_KEY = 'race_session_id';
-var SESSION_KEY = 'race_session';
+var STATE_KEY   = 'race_state';
+var SESSION_KEY    = 'race_session';
+var SESSION_ID_KEY = 'race_session_id';
 
 // ===== GÉNÉRATION CODE 6 CARACTÈRES =====
 function generateCode() {
@@ -410,16 +411,19 @@ function loadState() {
 
 function saveState() {
   state.raceElapsed = raceElapsed;
-  localStorage.setItem(STATE_KEY, JSON.stringify(state));
+  if (sessionId) {
+    fetch('/api/session/save', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({sessionId:sessionId, state:state}) }).catch(function(){});
+  }
 }
 
 // ===== SESSION =====
-function saveSession(role)  { sessionStorage.setItem(SESSION_KEY, role); }
+function saveSession(role)  { sessionStorage.setItem(SESSION_KEY, role); if (sessionId) sessionStorage.setItem(SESSION_ID_KEY, String(sessionId)); }
 function loadSession()      { return sessionStorage.getItem(SESSION_KEY); }
 function clearSession()     { sessionStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(SESSION_ID_KEY); }
 
 // ===== VARIABLES =====
-var state       = { adminCode:'', spectatorCode:'', maxLaps:10, raceRunning:false, raceFinished:false, raceElapsed:0, teams:[], lapData:{} };
+var state       = loadState();
+var sessionId   = null;
 var currentRole = null;
 var timerInterval = null;
 var raceElapsed   = 0;
@@ -438,20 +442,21 @@ function showScreen(id) {
 
 // ===== CRÉER SESSION =====
 function createSession() {
-  state.adminCode     = generateCode();
-  state.spectatorCode = generateCode();
-  saveState();
-  document.getElementById('display-admin-code').textContent     = state.adminCode;
-  document.getElementById('display-spectator-code').textContent = state.spectatorCode;
-  // Générer les liens de partage
-  var base = window.location.origin + window.location.pathname;
-  var linkSpect = base + '?s=' + state.spectatorCode + '&a=' + state.adminCode;
-  var linkAdmin = base + '?a=' + state.adminCode + '&s=' + state.spectatorCode;
-  var linkEl = document.getElementById('share-link-spectator');
-  if (linkEl) linkEl.textContent = linkSpect;
-  var linkAdEl = document.getElementById('share-link-admin');
-  if (linkAdEl) linkAdEl.textContent = linkAdmin;
-  showScreen('screen-codes');
+  fetch('/api/session/create', { method:'POST', headers:{'Content-Type':'application/json'} })
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      if (data.error) { showToast('Erreur: ' + data.error); return; }
+      state.adminCode     = data.adminCode;
+      state.spectatorCode = data.spectatorCode;
+      sessionId = data.sessionId;
+      document.getElementById('display-admin-code').textContent     = data.adminCode;
+      document.getElementById('display-spectator-code').textContent = data.spectatorCode;
+      var base = window.location.origin + window.location.pathname;
+      var linkEl = document.getElementById('share-link-spectator');
+      if (linkEl) linkEl.textContent = base + '?s=' + data.spectatorCode + '&a=' + data.adminCode;
+      showScreen('screen-codes');
+    })
+    .catch(function(){ showToast('Erreur connexion serveur'); });
 }
 
 function enterAsAdmin() {
@@ -464,30 +469,24 @@ function enterAsAdmin() {
 function joinSession() {
   var code = document.getElementById('join-code-input').value.trim().toUpperCase();
   var err  = document.getElementById('join-error');
-  // Récupérer les codes depuis l'URL si présents (partage entre appareils)
-  var urlCodes = getUrlCodes();
-  var adminCode     = urlCodes ? urlCodes.a : state.adminCode;
-  var spectatorCode = urlCodes ? urlCodes.s : state.spectatorCode;
-
-  if (code === adminCode) {
-    if (urlCodes) { state.adminCode = adminCode; state.spectatorCode = spectatorCode; saveState(); }
-    currentRole = 'admin';
-    saveSession('admin');
-    err.style.display = 'none';
-    startApp();
-  } else if (code === spectatorCode) {
-    if (urlCodes) { state.adminCode = adminCode; state.spectatorCode = spectatorCode; saveState(); }
-    currentRole = 'spectator';
-    saveSession('spectator');
-    err.style.display = 'none';
-    startApp();
-  } else {
-    err.style.display = 'block';
-    document.getElementById('join-code-input').value = '';
-  }
+  if (!code) return;
+  err.style.display = 'none';
+  fetch('/api/session/join', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({code:code}) })
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      if (data.error) { err.style.display='block'; document.getElementById('join-code-input').value=''; return; }
+      currentRole = data.role;
+      sessionId   = data.sessionId;
+      state       = data.state;
+      if (!state.teams)   state.teams   = [];
+      if (!state.lapData) state.lapData = {};
+      saveSession(currentRole);
+      startApp();
+    })
+    .catch(function(){ showToast('Erreur connexion serveur'); });
 }
 
-// Lire les codes depuis l'URL (?a=ADMIN&s=SPECTATEUR)
+// Lire le code depuis l'URL (?s=CODE)
 function getUrlCodes() {
   var params = new URLSearchParams(window.location.search);
   var a = params.get('a'), s = params.get('s');
@@ -875,25 +874,30 @@ function copyShareLink(el) {
 }
 
 // ===== INIT =====
-// Pré-remplir le code si présent dans l'URL
 (function() {
+  // Restaurer session existante
+  var savedRole = loadSession();
+  var savedId   = sessionStorage.getItem(SESSION_ID_KEY);
+  if (savedRole && savedId) {
+    sessionId   = parseInt(savedId);
+    currentRole = savedRole;
+    fetch('/api/session/' + sessionId + '/state')
+      .then(function(r){ return r.json(); })
+      .then(function(data) {
+        if (data && !data.error) { state = data; if(!state.teams) state.teams=[]; if(!state.lapData) state.lapData={}; }
+        startApp();
+      })
+      .catch(function(){ startApp(); });
+    return;
+  }
+  // Pré-remplir depuis URL
   var urlCodes = getUrlCodes();
   if (urlCodes) {
-    // Pré-remplir le champ avec le code spectateur
     var input = document.getElementById('join-code-input');
     if (input) input.value = urlCodes.s;
-    // Aller directement à l'écran rejoindre
     showScreen('screen-join');
   }
 })();
-
-var savedRole = loadSession();
-if (savedRole) { currentRole = savedRole; startApp(); }
 </script>
 </body>
 </html>
-
-
-
-
-
