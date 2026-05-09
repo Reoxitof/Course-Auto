@@ -305,12 +305,12 @@ body.is-admin .tab.admin-only{display:block!important}
       <h2>🏁 Équipes</h2>
       <!-- Nom de l'équipe -->
       <div style="margin-bottom:12px;">
-        <input type="text" id="team-name-input" class="setting-row" placeholder="Nom de l'équipe (optionnel)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);padding:11px 14px;font-size:14px;outline:none;"/>
+        <input type="text" id="team-name-input" placeholder="Nom de l'équipe (optionnel)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);padding:11px 14px;font-size:14px;outline:none;"/>
       </div>
       <!-- Étape 1 : couleur principale -->
       <div id="team-builder-step1">
         <p style="font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">1. Couleur principale</p>
-        <div class="color-picker-group">
+        <div class="color-picker-group" style="align-items:center;">
           <button class="color-swatch-add" style="background:#e74c3c" onclick="pickColor1('#e74c3c','Rouge',this)" title="Rouge"></button>
           <button class="color-swatch-add" style="background:#c0392b" onclick="pickColor1('#c0392b','Rouge foncé',this)" title="Rouge foncé"></button>
           <button class="color-swatch-add" style="background:#3498db" onclick="pickColor1('#3498db','Bleu',this)" title="Bleu"></button>
@@ -331,13 +331,18 @@ body.is-admin .tab.admin-only{display:block!important}
           <button class="color-swatch-add" style="background:#95a5a6" onclick="pickColor1('#95a5a6','Gris',this)" title="Gris"></button>
           <button class="color-swatch-add" style="background:#34495e" onclick="pickColor1('#34495e','Gris foncé',this)" title="Gris foncé"></button>
           <button class="color-swatch-add" style="background:#000000;border:1px solid #555" onclick="pickColor1('#000000','Noir',this)" title="Noir"></button>
+          <!-- Picker libre -->
+          <label style="position:relative;width:40px;height:40px;border-radius:50%;overflow:hidden;cursor:pointer;border:3px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;" title="Couleur personnalisée">
+            🎨
+            <input type="color" id="custom-color1" style="position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;" oninput="pickColor1Custom(this.value)"/>
+          </label>
         </div>
       </div>
       <!-- Étape 2 : couleur secondaire -->
       <div id="team-builder-step2" style="display:none;margin-top:14px;">
         <div id="team-color1-preview" style="height:6px;border-radius:3px;margin-bottom:10px;"></div>
         <p style="font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">2. 2ème couleur <span style="color:var(--green);font-size:11px;">(optionnel)</span></p>
-        <div class="color-picker-group">
+        <div class="color-picker-group" style="align-items:center;">
           <button class="color-swatch-add" style="background:#e74c3c" onclick="pickColor2('#e74c3c','Rouge')" title="Rouge"></button>
           <button class="color-swatch-add" style="background:#c0392b" onclick="pickColor2('#c0392b','Rouge foncé')" title="Rouge foncé"></button>
           <button class="color-swatch-add" style="background:#3498db" onclick="pickColor2('#3498db','Bleu')" title="Bleu"></button>
@@ -358,6 +363,11 @@ body.is-admin .tab.admin-only{display:block!important}
           <button class="color-swatch-add" style="background:#95a5a6" onclick="pickColor2('#95a5a6','Gris')" title="Gris"></button>
           <button class="color-swatch-add" style="background:#34495e" onclick="pickColor2('#34495e','Gris foncé')" title="Gris foncé"></button>
           <button class="color-swatch-add" style="background:#000000;border:1px solid #555" onclick="pickColor2('#000000','Noir')" title="Noir"></button>
+          <!-- Picker libre -->
+          <label style="position:relative;width:40px;height:40px;border-radius:50%;overflow:hidden;cursor:pointer;border:3px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;" title="Couleur personnalisée">
+            🎨
+            <input type="color" id="custom-color2" style="position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;" oninput="pickColor2Custom(this.value)"/>
+          </label>
         </div>
         <div style="display:flex;gap:8px;margin-top:12px;">
           <button class="btn-add" style="flex:1" onclick="confirmAddTeam()">✓ Ajouter (1 couleur)</button>
@@ -814,10 +824,27 @@ function pickColor1(color, name, btn) {
   document.getElementById('team-color1-preview').style.background = color;
 }
 
+function pickColor1Custom(color) {
+  pendingColor1 = color; pendingName1 = 'Perso';
+  document.querySelectorAll('#team-builder-step1 .color-swatch-add').forEach(function(b){ b.style.borderColor='transparent'; b.style.transform='scale(1)'; });
+  document.getElementById('team-builder-step2').style.display = 'block';
+  document.getElementById('team-color1-preview').style.background = color;
+  // Mettre à jour la couleur du picker visuel
+  document.getElementById('custom-color1').parentElement.style.background = color;
+}
+
 function pickColor2(color, name) {
   if (!pendingColor1) return;
   var customName = document.getElementById('team-name-input').value.trim();
   var label = customName || (pendingName1 + ' / ' + name);
+  addTeam(pendingColor1, color, label);
+  cancelTeamBuilder();
+}
+
+function pickColor2Custom(color) {
+  if (!pendingColor1) return;
+  var customName = document.getElementById('team-name-input').value.trim();
+  var label = customName || (pendingName1 + ' / Perso');
   addTeam(pendingColor1, color, label);
   cancelTeamBuilder();
 }
