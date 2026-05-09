@@ -466,6 +466,7 @@ function loadState() {
 function saveState() {
   state.raceElapsed = raceElapsed;
   localStorage.setItem(STATE_KEY, JSON.stringify(state));
+  if (currentRole === "admin") { syncToServer(); }
 }
 
 // ===== SESSION =====
@@ -555,6 +556,7 @@ function logout() {
   currentRole = null;
   clearSession();
   stopTimer();
+  stopPolling();
   document.getElementById('app').style.display = 'none';
   document.body.classList.remove('is-admin');
   showScreen('screen-home');
@@ -590,6 +592,8 @@ function startApp() {
   else if (state.raceRunning) setStatus('🟢 En course');
   else if (raceElapsed > 0)   setStatus('⏸ Pausée');
   else                        setStatus('En attente');
+  // Polling temps réel pour le spectateur
+  if (currentRole === 'spectator') { startPolling(); }
 }
 
 function setRaceButtons(showStart) {
@@ -989,6 +993,57 @@ function copyShareLink(el) {
   }
 }
 
+// ===== SYNC SERVEUR =====
+var syncTimeout = null;
+
+// Admin → pousse l'état vers le serveur (debounce 500ms)
+function syncToServer() {
+  if (syncTimeout) clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(function() {
+    fetch('/api/state', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ adminCode: state.adminCode, state: state })
+    }).catch(function(){});
+  }, 500);
+}
+
+// Spectateur → polling toutes les 2 secondes
+var pollInterval = null;
+function startPolling() {
+  if (pollInterval) clearInterval(pollInterval);
+  pollInterval = setInterval(function() {
+    fetch('/api/state')
+      .then(function(r){ return r.json(); })
+      .then(function(data) {
+        if (!data.state) return;
+        var remote = data.state;
+        // Mettre à jour le state local avec les données du serveur
+        state.teams      = remote.teams      || state.teams;
+        state.lapData    = remote.lapData    || state.lapData;
+        state.maxLaps    = remote.maxLaps    || state.maxLaps;
+        state.raceRunning  = remote.raceRunning;
+        state.raceFinished = remote.raceFinished;
+        state.raceElapsed  = remote.raceElapsed || 0;
+        // Mettre à jour le timer
+        raceElapsed = state.raceElapsed;
+        updateTimerDisplay();
+        // Mettre à jour le statut
+        if (state.raceFinished)     setStatus('🏁 Terminée');
+        else if (state.raceRunning) setStatus('🟢 En course');
+        else if (raceElapsed > 0)   setStatus('⏸ Pausée');
+        else                        setStatus('En attente');
+        // Rafraîchir l'affichage
+        renderCards();
+        renderResults();
+        document.getElementById('max-laps-display').textContent = state.maxLaps;
+      }).catch(function(){});
+  }, 2000);
+}
+
+function stopPolling() {
+  if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+}
 // ===== INIT =====
 (function() {
   // Connexion automatique si codes présents dans l'URL
