@@ -489,7 +489,7 @@ function createSession() {
   document.getElementById('display-spectator-code').textContent = state.spectatorCode;
   // Générer les liens de partage
   var base = window.location.origin + window.location.pathname;
-  var linkSpect = base + '?s=' + state.spectatorCode + '&a=' + state.adminCode;
+  var linkSpect = base + '?s=' + state.spectatorCode + '&a=' + state.adminCode + '&role=spectator';
   var linkAdmin = base + '?a=' + state.adminCode + '&s=' + state.spectatorCode;
   var linkEl = document.getElementById('share-link-spectator');
   if (linkEl) linkEl.textContent = linkSpect;
@@ -955,20 +955,29 @@ function copyShareLink(el) {
 }
 
 // ===== INIT =====
-// Pré-remplir le code si présent dans l'URL
 (function() {
+  // Connexion automatique si codes présents dans l'URL
   var urlCodes = getUrlCodes();
   if (urlCodes) {
-    // Pré-remplir le champ avec le code spectateur
-    var input = document.getElementById('join-code-input');
-    if (input) input.value = urlCodes.s;
-    // Aller directement à l'écran rejoindre
-    showScreen('screen-join');
+    state.adminCode     = urlCodes.a;
+    state.spectatorCode = urlCodes.s;
+    saveState();
+    var params = new URLSearchParams(window.location.search);
+    var role = params.get('role');
+    if (role === 'admin') {
+      currentRole = 'admin';
+      saveSession('admin');
+    } else {
+      currentRole = 'spectator';
+      saveSession('spectator');
+    }
+    startApp();
+    return;
   }
+  // Sinon restaurer la session existante
+  var savedRole = loadSession();
+  if (savedRole) { currentRole = savedRole; startApp(); }
 })();
-
-var savedRole = loadSession();
-if (savedRole) { currentRole = savedRole; startApp(); }
 </script>
 </body>
 </html>
