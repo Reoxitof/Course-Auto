@@ -303,37 +303,61 @@ body.is-admin .tab.admin-only{display:block!important}
     </div>
     <div class="settings-section">
       <h2>🏁 Équipes</h2>
+      <!-- Nom de l'équipe -->
+      <div style="margin-bottom:12px;">
+        <input type="text" id="team-name-input" class="setting-row" placeholder="Nom de l'équipe (optionnel)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);padding:11px 14px;font-size:14px;outline:none;"/>
+      </div>
       <!-- Étape 1 : couleur principale -->
       <div id="team-builder-step1">
-        <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">1. Choisis la couleur principale</p>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">1. Couleur principale</p>
         <div class="color-picker-group">
-          <button class="color-swatch-add" style="background:#e74c3c" onclick="pickColor1('#e74c3c','Rouge',this)"></button>
-          <button class="color-swatch-add" style="background:#3498db" onclick="pickColor1('#3498db','Bleu',this)"></button>
-          <button class="color-swatch-add" style="background:#2ecc71" onclick="pickColor1('#2ecc71','Vert',this)"></button>
-          <button class="color-swatch-add" style="background:#f39c12" onclick="pickColor1('#f39c12','Orange',this)"></button>
-          <button class="color-swatch-add" style="background:#9b59b6" onclick="pickColor1('#9b59b6','Violet',this)"></button>
-          <button class="color-swatch-add" style="background:#1abc9c" onclick="pickColor1('#1abc9c','Turquoise',this)"></button>
-          <button class="color-swatch-add" style="background:#e67e22" onclick="pickColor1('#e67e22','Marron',this)"></button>
-          <button class="color-swatch-add" style="background:#ecf0f1" onclick="pickColor1('#ecf0f1','Blanc',this)"></button>
-          <button class="color-swatch-add" style="background:#e91e8c" onclick="pickColor1('#e91e8c','Rose',this)"></button>
-          <button class="color-swatch-add" style="background:#ffeb3b" onclick="pickColor1('#ffeb3b','Jaune',this)"></button>
+          <button class="color-swatch-add" style="background:#e74c3c" onclick="pickColor1('#e74c3c','Rouge',this)" title="Rouge"></button>
+          <button class="color-swatch-add" style="background:#c0392b" onclick="pickColor1('#c0392b','Rouge foncé',this)" title="Rouge foncé"></button>
+          <button class="color-swatch-add" style="background:#3498db" onclick="pickColor1('#3498db','Bleu',this)" title="Bleu"></button>
+          <button class="color-swatch-add" style="background:#2980b9" onclick="pickColor1('#2980b9','Bleu foncé',this)" title="Bleu foncé"></button>
+          <button class="color-swatch-add" style="background:#2ecc71" onclick="pickColor1('#2ecc71','Vert',this)" title="Vert"></button>
+          <button class="color-swatch-add" style="background:#27ae60" onclick="pickColor1('#27ae60','Vert foncé',this)" title="Vert foncé"></button>
+          <button class="color-swatch-add" style="background:#f39c12" onclick="pickColor1('#f39c12','Orange',this)" title="Orange"></button>
+          <button class="color-swatch-add" style="background:#e67e22" onclick="pickColor1('#e67e22','Orange foncé',this)" title="Orange foncé"></button>
+          <button class="color-swatch-add" style="background:#9b59b6" onclick="pickColor1('#9b59b6','Violet',this)" title="Violet"></button>
+          <button class="color-swatch-add" style="background:#8e44ad" onclick="pickColor1('#8e44ad','Violet foncé',this)" title="Violet foncé"></button>
+          <button class="color-swatch-add" style="background:#1abc9c" onclick="pickColor1('#1abc9c','Turquoise',this)" title="Turquoise"></button>
+          <button class="color-swatch-add" style="background:#16a085" onclick="pickColor1('#16a085','Turquoise foncé',this)" title="Turquoise foncé"></button>
+          <button class="color-swatch-add" style="background:#e91e8c" onclick="pickColor1('#e91e8c','Rose',this)" title="Rose"></button>
+          <button class="color-swatch-add" style="background:#ad1457" onclick="pickColor1('#ad1457','Rose foncé',this)" title="Rose foncé"></button>
+          <button class="color-swatch-add" style="background:#ffeb3b" onclick="pickColor1('#ffeb3b','Jaune',this)" title="Jaune"></button>
+          <button class="color-swatch-add" style="background:#f9a825" onclick="pickColor1('#f9a825','Jaune foncé',this)" title="Jaune foncé"></button>
+          <button class="color-swatch-add" style="background:#ecf0f1" onclick="pickColor1('#ecf0f1','Blanc',this)" title="Blanc"></button>
+          <button class="color-swatch-add" style="background:#95a5a6" onclick="pickColor1('#95a5a6','Gris',this)" title="Gris"></button>
+          <button class="color-swatch-add" style="background:#34495e" onclick="pickColor1('#34495e','Gris foncé',this)" title="Gris foncé"></button>
+          <button class="color-swatch-add" style="background:#000000;border:1px solid #555" onclick="pickColor1('#000000','Noir',this)" title="Noir"></button>
         </div>
       </div>
       <!-- Étape 2 : couleur secondaire -->
       <div id="team-builder-step2" style="display:none;margin-top:14px;">
         <div id="team-color1-preview" style="height:6px;border-radius:3px;margin-bottom:10px;"></div>
-        <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">2. Choisis une 2ème couleur <span style="color:var(--green);font-size:11px;">(optionnel)</span></p>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">2. 2ème couleur <span style="color:var(--green);font-size:11px;">(optionnel)</span></p>
         <div class="color-picker-group">
-          <button class="color-swatch-add" style="background:#e74c3c" onclick="pickColor2('#e74c3c','Rouge')"></button>
-          <button class="color-swatch-add" style="background:#3498db" onclick="pickColor2('#3498db','Bleu')"></button>
-          <button class="color-swatch-add" style="background:#2ecc71" onclick="pickColor2('#2ecc71','Vert')"></button>
-          <button class="color-swatch-add" style="background:#f39c12" onclick="pickColor2('#f39c12','Orange')"></button>
-          <button class="color-swatch-add" style="background:#9b59b6" onclick="pickColor2('#9b59b6','Violet')"></button>
-          <button class="color-swatch-add" style="background:#1abc9c" onclick="pickColor2('#1abc9c','Turquoise')"></button>
-          <button class="color-swatch-add" style="background:#e67e22" onclick="pickColor2('#e67e22','Marron')"></button>
-          <button class="color-swatch-add" style="background:#ecf0f1" onclick="pickColor2('#ecf0f1','Blanc')"></button>
-          <button class="color-swatch-add" style="background:#e91e8c" onclick="pickColor2('#e91e8c','Rose')"></button>
-          <button class="color-swatch-add" style="background:#ffeb3b" onclick="pickColor2('#ffeb3b','Jaune')"></button>
+          <button class="color-swatch-add" style="background:#e74c3c" onclick="pickColor2('#e74c3c','Rouge')" title="Rouge"></button>
+          <button class="color-swatch-add" style="background:#c0392b" onclick="pickColor2('#c0392b','Rouge foncé')" title="Rouge foncé"></button>
+          <button class="color-swatch-add" style="background:#3498db" onclick="pickColor2('#3498db','Bleu')" title="Bleu"></button>
+          <button class="color-swatch-add" style="background:#2980b9" onclick="pickColor2('#2980b9','Bleu foncé')" title="Bleu foncé"></button>
+          <button class="color-swatch-add" style="background:#2ecc71" onclick="pickColor2('#2ecc71','Vert')" title="Vert"></button>
+          <button class="color-swatch-add" style="background:#27ae60" onclick="pickColor2('#27ae60','Vert foncé')" title="Vert foncé"></button>
+          <button class="color-swatch-add" style="background:#f39c12" onclick="pickColor2('#f39c12','Orange')" title="Orange"></button>
+          <button class="color-swatch-add" style="background:#e67e22" onclick="pickColor2('#e67e22','Orange foncé')" title="Orange foncé"></button>
+          <button class="color-swatch-add" style="background:#9b59b6" onclick="pickColor2('#9b59b6','Violet')" title="Violet"></button>
+          <button class="color-swatch-add" style="background:#8e44ad" onclick="pickColor2('#8e44ad','Violet foncé')" title="Violet foncé"></button>
+          <button class="color-swatch-add" style="background:#1abc9c" onclick="pickColor2('#1abc9c','Turquoise')" title="Turquoise"></button>
+          <button class="color-swatch-add" style="background:#16a085" onclick="pickColor2('#16a085','Turquoise foncé')" title="Turquoise foncé"></button>
+          <button class="color-swatch-add" style="background:#e91e8c" onclick="pickColor2('#e91e8c','Rose')" title="Rose"></button>
+          <button class="color-swatch-add" style="background:#ad1457" onclick="pickColor2('#ad1457','Rose foncé')" title="Rose foncé"></button>
+          <button class="color-swatch-add" style="background:#ffeb3b" onclick="pickColor2('#ffeb3b','Jaune')" title="Jaune"></button>
+          <button class="color-swatch-add" style="background:#f9a825" onclick="pickColor2('#f9a825','Jaune foncé')" title="Jaune foncé"></button>
+          <button class="color-swatch-add" style="background:#ecf0f1" onclick="pickColor2('#ecf0f1','Blanc')" title="Blanc"></button>
+          <button class="color-swatch-add" style="background:#95a5a6" onclick="pickColor2('#95a5a6','Gris')" title="Gris"></button>
+          <button class="color-swatch-add" style="background:#34495e" onclick="pickColor2('#34495e','Gris foncé')" title="Gris foncé"></button>
+          <button class="color-swatch-add" style="background:#000000;border:1px solid #555" onclick="pickColor2('#000000','Noir')" title="Noir"></button>
         </div>
         <div style="display:flex;gap:8px;margin-top:12px;">
           <button class="btn-add" style="flex:1" onclick="confirmAddTeam()">✓ Ajouter (1 couleur)</button>
@@ -784,30 +808,32 @@ var pendingColor1 = null, pendingName1 = null;
 
 function pickColor1(color, name, btn) {
   pendingColor1 = color; pendingName1 = name;
-  // Highlight sélection
   document.querySelectorAll('#team-builder-step1 .color-swatch-add').forEach(function(b){ b.style.borderColor='transparent'; b.style.transform='scale(1)'; });
   btn.style.borderColor = '#fff'; btn.style.transform = 'scale(1.15)';
-  // Afficher étape 2
   document.getElementById('team-builder-step2').style.display = 'block';
   document.getElementById('team-color1-preview').style.background = color;
 }
 
 function pickColor2(color, name) {
   if (!pendingColor1) return;
-  var label = pendingName1 + ' / ' + name;
+  var customName = document.getElementById('team-name-input').value.trim();
+  var label = customName || (pendingName1 + ' / ' + name);
   addTeam(pendingColor1, color, label);
   cancelTeamBuilder();
 }
 
 function confirmAddTeam() {
   if (!pendingColor1) return;
-  addTeam(pendingColor1, null, pendingName1);
+  var customName = document.getElementById('team-name-input').value.trim();
+  var label = customName || pendingName1;
+  addTeam(pendingColor1, null, label);
   cancelTeamBuilder();
 }
 
 function cancelTeamBuilder() {
   pendingColor1 = null; pendingName1 = null;
   document.getElementById('team-builder-step2').style.display = 'none';
+  document.getElementById('team-name-input').value = '';
   document.querySelectorAll('#team-builder-step1 .color-swatch-add').forEach(function(b){ b.style.borderColor='transparent'; b.style.transform='scale(1)'; });
 }
 
