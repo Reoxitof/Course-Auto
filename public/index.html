@@ -251,6 +251,7 @@ body.is-admin .tab.admin-only{display:block!important}
       <button class="btn-start" id="btn-start-race" onclick="startRace()">▶ Démarrer</button>
       <button class="btn-stop" id="btn-stop-race" onclick="stopRace()" style="display:none;">⏹ Pause</button>
       <button class="btn-reset" onclick="resetRace()">🔄 Reset</button>
+      <button class="btn-reset" onclick="resetTimer()" title="Remettre le chrono à 0">⏱ 0</button>
     </div>
     <div class="global-timer" id="global-timer">00:00.00</div>
     <div id="pilots-grid" class="pilots-grid"></div>
@@ -610,6 +611,18 @@ function resetRace() {
   stopTimer(); initLapData(); saveState();
   setRaceButtons(true); setStatus('En attente');
   updateTimerDisplay(); renderAll(); showToast('Course réinitialisée');
+}
+
+function resetTimer() {
+  stopTimer();
+  raceElapsed = 0;
+  state.raceElapsed = 0;
+  state.raceRunning = false;
+  saveState();
+  updateTimerDisplay();
+  setRaceButtons(true);
+  setStatus('En attente');
+  showToast('Chrono remis à 0');
 }
 
 // ===== TIMER =====
