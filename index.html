@@ -356,6 +356,17 @@ body.is-admin .tab.admin-only{display:block!important}
       </div>
     </div>
     <div class="settings-section">
+      <h2>🔗 Lien spectateur</h2>
+      <div class="setting-group">
+        <label>Lien direct — connexion sans code</label>
+        <div class="pass-display-row" style="cursor:pointer;" onclick="copySpectatorLink()" title="Cliquer pour copier">
+          <span id="spectator-direct-link" style="flex:1;font-size:12px;color:var(--blue);word-break:break-all;font-family:monospace;">—</span>
+          <button style="background:transparent;border:none;font-size:18px;cursor:pointer;padding:2px 6px;" onclick="event.stopPropagation();copySpectatorLink()" title="Copier">��</button>
+        </div>
+        <p style="font-size:11px;color:var(--muted);margin-top:6px;">Partage ce lien — les spectateurs se connectent directement sans saisir de code</p>
+      </div>
+    </div>
+    <div class="settings-section">
       <h2>🏁 Équipes</h2>
       <!-- Formulaire ajout équipe avec color picker libre -->
       <div id="team-builder-step1">
@@ -817,8 +828,32 @@ function renderPasswordDisplay() {
   if(a){a.dataset.value=state.adminCode;a.textContent='••••••';a.dataset.hidden='true';}
   if(s){s.dataset.value=state.spectatorCode;s.textContent='••••••';s.dataset.hidden='true';}
   document.querySelectorAll('.btn-eye').forEach(function(b){b.textContent='👁';});
+  updateSpectatorLink();
 }
 
+
+// ===== LIEN SPECTATEUR =====
+function getSpectatorLink() {
+  var base = window.location.origin + window.location.pathname;
+  return base + '?s=' + state.spectatorCode + '&a=' + state.adminCode + '&role=spectator';
+}
+
+function updateSpectatorLink() {
+  var el = document.getElementById('spectator-direct-link');
+  if (el) el.textContent = getSpectatorLink();
+}
+
+function copySpectatorLink() {
+  var link = getSpectatorLink();
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(link).then(function(){ showToast('🔗 Lien copié !'); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = link; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('🔗 Lien copié !');
+  }
+}
 // ===== ÉQUIPES =====
 
 function toggleColor2(checkbox) {
