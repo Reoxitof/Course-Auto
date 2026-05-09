@@ -155,6 +155,60 @@ body.is-admin .tab.admin-only{display:block!important}
 
 @media(min-width:600px){.pilots-grid{display:grid;grid-template-columns:repeat(2,1fr)}.global-timer{font-size:56px}}
 @media(min-width:900px){.pilots-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* ===== TEAM COLOR PICKER ===== */
+.team-color-input {
+  width: 44px; height: 44px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 2px;
+  background: transparent;
+  flex-shrink: 0;
+}
+.team-color-input::-webkit-color-swatch-wrapper { padding: 0; border-radius: 50%; }
+.team-color-input::-webkit-color-swatch { border: none; border-radius: 50%; }
+.team-color-input:disabled { cursor: not-allowed; }
+
+.team-color-input-sm {
+  width: 32px; height: 32px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 1px;
+  background: transparent;
+  flex-shrink: 0;
+}
+.team-color-input-sm::-webkit-color-swatch-wrapper { padding: 0; border-radius: 4px; }
+.team-color-input-sm::-webkit-color-swatch { border: none; border-radius: 4px; }
+.team-color-input-sm:disabled { cursor: not-allowed; }
+
+.team-rename-input {
+  flex: 1;
+  min-width: 80px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--rs);
+  color: var(--text);
+  padding: 7px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+}
+.team-rename-input:focus { border-color: var(--red); }
+
+.btn-rename {
+  background: var(--green); color: #fff; border: none;
+  border-radius: var(--rs); padding: 7px 12px;
+  font-size: 14px; font-weight: 700; cursor: pointer; flex-shrink: 0;
+}
+.btn-rename:active { opacity: 0.8; }
+
+.team-item-edit {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  padding: 12px 14px !important;
+}
 </style>
 </head>
 <body>
@@ -303,44 +357,34 @@ body.is-admin .tab.admin-only{display:block!important}
     </div>
     <div class="settings-section">
       <h2>🏁 Équipes</h2>
-      <!-- Étape 1 : couleur principale -->
+      <!-- Formulaire ajout équipe avec color picker libre -->
       <div id="team-builder-step1">
-        <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">1. Choisis la couleur principale</p>
-        <div class="color-picker-group">
-          <button class="color-swatch-add" style="background:#e74c3c" onclick="pickColor1('#e74c3c','Rouge',this)"></button>
-          <button class="color-swatch-add" style="background:#3498db" onclick="pickColor1('#3498db','Bleu',this)"></button>
-          <button class="color-swatch-add" style="background:#2ecc71" onclick="pickColor1('#2ecc71','Vert',this)"></button>
-          <button class="color-swatch-add" style="background:#f39c12" onclick="pickColor1('#f39c12','Orange',this)"></button>
-          <button class="color-swatch-add" style="background:#9b59b6" onclick="pickColor1('#9b59b6','Violet',this)"></button>
-          <button class="color-swatch-add" style="background:#1abc9c" onclick="pickColor1('#1abc9c','Turquoise',this)"></button>
-          <button class="color-swatch-add" style="background:#e67e22" onclick="pickColor1('#e67e22','Marron',this)"></button>
-          <button class="color-swatch-add" style="background:#ecf0f1" onclick="pickColor1('#ecf0f1','Blanc',this)"></button>
-          <button class="color-swatch-add" style="background:#e91e8c" onclick="pickColor1('#e91e8c','Rose',this)"></button>
-          <button class="color-swatch-add" style="background:#ffeb3b" onclick="pickColor1('#ffeb3b','Jaune',this)"></button>
+        <div class="setting-group">
+          <label>Nom de l'équipe</label>
+          <div class="setting-row">
+            <input type="text" id="new-team-name" placeholder="Ex: Équipe Rouge" style="flex:1;min-width:100px;">
+          </div>
         </div>
+        <div class="setting-group" style="margin-top:10px;">
+          <label>Couleurs</label>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <input type="color" id="new-team-color1" value="#e74c3c" class="team-color-input" title="Couleur principale">
+              <span style="font-size:10px;color:var(--muted);">Principale</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <input type="color" id="new-team-color2" value="#3498db" class="team-color-input" title="2ème couleur" disabled style="opacity:0.3;">
+              <span style="font-size:10px;color:var(--muted);">2ème couleur</span>
+            </div>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer;">
+              <input type="checkbox" id="use-color2" onchange="toggleColor2(this)" style="width:16px;height:16px;cursor:pointer;">
+              Activer 2ème couleur
+            </label>
+          </div>
+        </div>
+        <button class="btn-add" style="width:100%;margin-top:12px;" onclick="addTeamFromForm()">+ Ajouter l'équipe</button>
       </div>
-      <!-- Étape 2 : couleur secondaire -->
-      <div id="team-builder-step2" style="display:none;margin-top:14px;">
-        <div id="team-color1-preview" style="height:6px;border-radius:3px;margin-bottom:10px;"></div>
-        <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">2. Choisis une 2ème couleur <span style="color:var(--green);font-size:11px;">(optionnel)</span></p>
-        <div class="color-picker-group">
-          <button class="color-swatch-add" style="background:#e74c3c" onclick="pickColor2('#e74c3c','Rouge')"></button>
-          <button class="color-swatch-add" style="background:#3498db" onclick="pickColor2('#3498db','Bleu')"></button>
-          <button class="color-swatch-add" style="background:#2ecc71" onclick="pickColor2('#2ecc71','Vert')"></button>
-          <button class="color-swatch-add" style="background:#f39c12" onclick="pickColor2('#f39c12','Orange')"></button>
-          <button class="color-swatch-add" style="background:#9b59b6" onclick="pickColor2('#9b59b6','Violet')"></button>
-          <button class="color-swatch-add" style="background:#1abc9c" onclick="pickColor2('#1abc9c','Turquoise')"></button>
-          <button class="color-swatch-add" style="background:#e67e22" onclick="pickColor2('#e67e22','Marron')"></button>
-          <button class="color-swatch-add" style="background:#ecf0f1" onclick="pickColor2('#ecf0f1','Blanc')"></button>
-          <button class="color-swatch-add" style="background:#e91e8c" onclick="pickColor2('#e91e8c','Rose')"></button>
-          <button class="color-swatch-add" style="background:#ffeb3b" onclick="pickColor2('#ffeb3b','Jaune')"></button>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:12px;">
-          <button class="btn-add" style="flex:1" onclick="confirmAddTeam()">✓ Ajouter (1 couleur)</button>
-          <button class="btn-back" style="flex:0;padding:10px 14px;" onclick="cancelTeamBuilder()">✕</button>
-        </div>
-      </div>
-      <div id="teams-list" class="teams-list"></div>
+<div id="teams-list" class="teams-list"></div>
     </div>
   </div>
 </div>
@@ -776,64 +820,100 @@ function renderPasswordDisplay() {
 }
 
 // ===== ÉQUIPES =====
-var pendingColor1 = null, pendingName1 = null;
 
-function pickColor1(color, name, btn) {
-  pendingColor1 = color; pendingName1 = name;
-  // Highlight sélection
-  document.querySelectorAll('#team-builder-step1 .color-swatch-add').forEach(function(b){ b.style.borderColor='transparent'; b.style.transform='scale(1)'; });
-  btn.style.borderColor = '#fff'; btn.style.transform = 'scale(1.15)';
-  // Afficher étape 2
-  document.getElementById('team-builder-step2').style.display = 'block';
-  document.getElementById('team-color1-preview').style.background = color;
+function toggleColor2(checkbox) {
+  var input = document.getElementById('new-team-color2');
+  input.disabled = !checkbox.checked;
+  input.style.opacity = checkbox.checked ? '1' : '0.3';
 }
 
-function pickColor2(color, name) {
-  if (!pendingColor1) return;
-  var label = pendingName1 + ' / ' + name;
-  addTeam(pendingColor1, color, label);
-  cancelTeamBuilder();
-}
-
-function confirmAddTeam() {
-  if (!pendingColor1) return;
-  addTeam(pendingColor1, null, pendingName1);
-  cancelTeamBuilder();
-}
-
-function cancelTeamBuilder() {
-  pendingColor1 = null; pendingName1 = null;
-  document.getElementById('team-builder-step2').style.display = 'none';
-  document.querySelectorAll('#team-builder-step1 .color-swatch-add').forEach(function(b){ b.style.borderColor='transparent'; b.style.transform='scale(1)'; });
-}
-
-function addTeam(color1, color2, name) {
+function addTeamFromForm() {
+  var name = document.getElementById('new-team-name').value.trim();
+  var color1 = document.getElementById('new-team-color1').value;
+  var useColor2 = document.getElementById('use-color2').checked;
+  var color2 = useColor2 ? document.getElementById('new-team-color2').value : null;
+  if (!name) { showToast('Entrez un nom d\'équipe'); return; }
   if (state.teams.length >= 50) { showToast('Max 50 équipes'); return; }
   var newId = 't' + Date.now();
-  state.teams.push({ id:newId, name:name, color:color1, color2:color2||null });
-  state.lapData[newId] = { laps:[], penalty:0, dnf:false, lapStartTime:0 };
+  state.teams.push({ id: newId, name: name, color: color1, color2: color2 });
+  state.lapData[newId] = { laps: [], penalty: 0, dnf: false, lapStartTime: 0 };
+  document.getElementById('new-team-name').value = '';
+  document.getElementById('new-team-color1').value = '#e74c3c';
+  document.getElementById('new-team-color2').value = '#3498db';
+  document.getElementById('use-color2').checked = false;
+  toggleColor2(document.getElementById('use-color2'));
   saveState(); renderTeamsList(); renderCards();
-  showToast('Équipe ' + name + ' ajoutée');
+  showToast('Équipe "' + name + '" ajoutée');
 }
+
 function deleteTeam(id) {
   state.teams = state.teams.filter(function(t){ return t.id !== id; });
   delete state.lapData[id];
   saveState(); renderTeamsList(); renderCards(); renderResults();
 }
+
+function renameTeam(id) {
+  var team = state.teams.find(function(t){ return t.id === id; });
+  if (!team) return;
+  var input = document.getElementById('rename-' + id);
+  var newName = input.value.trim();
+  if (!newName) { showToast('Nom invalide'); return; }
+  team.name = newName;
+  saveState(); renderTeamsList(); renderCards(); renderResults();
+  showToast('Équipe renommée en "' + newName + '"');
+}
+
+function changeTeamColor(id, which) {
+  var team = state.teams.find(function(t){ return t.id === id; });
+  if (!team) return;
+  var input = document.getElementById('color-' + which + '-' + id);
+  if (which === '1') team.color = input.value;
+  else team.color2 = input.value;
+  saveState(); renderTeamsList(); renderCards(); renderResults();
+}
+
+function toggleTeamColor2(id, checkbox) {
+  var team = state.teams.find(function(t){ return t.id === id; });
+  if (!team) return;
+  var input = document.getElementById('color-2-' + id);
+  if (checkbox.checked) {
+    team.color2 = input.value;
+    input.disabled = false; input.style.opacity = '1';
+  } else {
+    team.color2 = null;
+    input.disabled = true; input.style.opacity = '0.3';
+  }
+  saveState(); renderCards(); renderResults();
+}
+
 function renderTeamsList() {
-  var list=document.getElementById('teams-list'); list.innerHTML='';
+  var list = document.getElementById('teams-list');
+  list.innerHTML = '';
   state.teams.forEach(function(team) {
-    var div=document.createElement('div'); div.className='team-item';
-    var colorBar = team.color2
-      ? 'background:linear-gradient(90deg,'+team.color+' 50%,'+team.color2+' 50%)'
-      : 'background:'+team.color;
-    div.innerHTML='<span class="team-color-dot" style="'+colorBar+';width:24px;height:24px;border-radius:4px;flex-shrink:0"></span>'+
-      '<span class="team-item-name" style="color:'+team.color+'">'+team.name+'</span>'+
-      '<button class="btn-delete" onclick="deleteTeam(\''+team.id+'\')">✕</button>';
+    var div = document.createElement('div');
+    div.className = 'team-item team-item-edit';
+    var hasColor2 = !!team.color2;
+    var colorBar = hasColor2
+      ? 'background:linear-gradient(90deg,' + team.color + ' 50%,' + team.color2 + ' 50%)'
+      : 'background:' + team.color;
+    div.innerHTML =
+      '<div style="display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap;">' +
+        '<div style="' + colorBar + ';width:24px;height:24px;border-radius:4px;flex-shrink:0;"></div>' +
+        '<input type="text" id="rename-' + team.id + '" value="' + team.name.replace(/"/g,'&quot;') + '" class="team-rename-input" placeholder="Nom">' +
+        '<button class="btn-rename" onclick="renameTeam(\'' + team.id + '\')">✓</button>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap;">' +
+        '<input type="color" id="color-1-' + team.id + '" value="' + team.color + '" class="team-color-input-sm" title="Couleur principale" onchange="changeTeamColor(\'' + team.id + '\',\'1\')">' +
+        '<input type="color" id="color-2-' + team.id + '" value="' + (team.color2 || '#3498db') + '" class="team-color-input-sm" title="2ème couleur"' + (hasColor2 ? '' : ' disabled style="opacity:0.3;"') + ' onchange="changeTeamColor(\'' + team.id + '\',\'2\')">' +
+        '<label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);cursor:pointer;">' +
+          '<input type="checkbox" ' + (hasColor2 ? 'checked' : '') + ' onchange="toggleTeamColor2(\'' + team.id + '\',this)" style="cursor:pointer;">' +
+          '2ème couleur' +
+        '</label>' +
+        '<button class="btn-delete" onclick="deleteTeam(\'' + team.id + '\')">✕</button>' +
+      '</div>';
     list.appendChild(div);
   });
 }
-
 // ===== RENDER ALL =====
 function renderAll() {
   renderCards(); renderResults();
