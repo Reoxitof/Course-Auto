@@ -593,7 +593,14 @@ function startApp() {
   else if (raceElapsed > 0)   setStatus('⏸ Pausée');
   else                        setStatus('En attente');
   // Polling temps réel pour le spectateur
-  if (currentRole === 'spectator') { startPolling(); }
+  if (currentRole === 'spectator') {
+    startPolling();
+    // Aller directement sur l'onglet Résultats
+    showTab('results');
+  } else if (currentRole === 'admin') {
+    // Pousser l'état immédiatement au démarrage
+    syncToServer();
+  }
 }
 
 function setRaceButtons(showStart) {
