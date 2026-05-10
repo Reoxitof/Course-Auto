@@ -520,29 +520,40 @@ function enterAsAdmin() {
 function joinSession() {
   var code = document.getElementById('join-code-input').value.trim().toUpperCase();
   var err  = document.getElementById('join-error');
-  // Récupérer les codes depuis l'URL si présents (partage entre appareils)
+
+  // 1. Vérifier d'abord avec les codes locaux / URL
   var urlCodes = getUrlCodes();
   var adminCode     = urlCodes ? urlCodes.a : state.adminCode;
   var spectatorCode = urlCodes ? urlCodes.s : state.spectatorCode;
 
   if (code === adminCode) {
     if (urlCodes) { state.adminCode = adminCode; state.spectatorCode = spectatorCode; saveState(); }
-    currentRole = 'admin';
-    saveSession('admin');
-    err.style.display = 'none';
-    startApp();
+    currentRole = 'admin'; saveSession('admin'); err.style.display = 'none'; startApp(); return;
   } else if (code === spectatorCode) {
     if (urlCodes) { state.adminCode = adminCode; state.spectatorCode = spectatorCode; saveState(); }
-    currentRole = 'spectator';
-    saveSession('spectator');
-    err.style.display = 'none';
-    startApp();
-  } else {
-    err.style.display = 'block';
-    document.getElementById('join-code-input').value = '';
+    currentRole = 'spectator'; saveSession('spectator'); err.style.display = 'none'; startApp(); return;
   }
-}
 
+  // 2. Si pas trouvé localement, vérifier contre le serveur
+  fetch('/api/state')
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      if (!data.state) { err.style.display = 'block'; document.getElementById('join-code-input').value = ''; return; }
+      var srvAdmin     = data.state.adminCode;
+      var srvSpectator = data.state.spectatorCode;
+      if (code === srvAdmin) {
+        state.adminCode = srvAdmin; state.spectatorCode = srvSpectator; saveState();
+        currentRole = 'admin'; saveSession('admin'); err.style.display = 'none'; startApp();
+      } else if (code === srvSpectator) {
+        state.adminCode = srvAdmin; state.spectatorCode = srvSpectator; saveState();
+        currentRole = 'spectator'; saveSession('spectator'); err.style.display = 'none'; startApp();
+      } else {
+        err.style.display = 'block';
+        document.getElementById('join-code-input').value = '';
+      }
+    })
+    .catch(function() { err.style.display = 'block'; document.getElementById('join-code-input').value = ''; });
+}
 // Lire les codes depuis l'URL (?a=ADMIN&s=SPECTATEUR)
 function getUrlCodes() {
   var params = new URLSearchParams(window.location.search);
