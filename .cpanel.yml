@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/reoxdnvn/courseautomobile
+    - /bin/cp -r . $DEPLOYPATH
+    - cd $DEPLOYPATH && source /home/reoxdnvn/nodevenv/courseautomobile/24/bin/activate && npm install --production
