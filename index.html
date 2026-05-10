@@ -520,39 +520,61 @@ function enterAsAdmin() {
 function joinSession() {
   var code = document.getElementById('join-code-input').value.trim().toUpperCase();
   var err  = document.getElementById('join-error');
+  var input = document.getElementById('join-code-input');
+  if (!code) return;
 
-  // 1. Vérifier d'abord avec les codes locaux / URL
-  var urlCodes = getUrlCodes();
-  var adminCode     = urlCodes ? urlCodes.a : state.adminCode;
-  var spectatorCode = urlCodes ? urlCodes.s : state.spectatorCode;
+  err.style.display = 'none';
+  input.disabled = true;
+  input.value = code;
 
-  if (code === adminCode) {
-    if (urlCodes) { state.adminCode = adminCode; state.spectatorCode = spectatorCode; saveState(); }
-    currentRole = 'admin'; saveSession('admin'); err.style.display = 'none'; startApp(); return;
-  } else if (code === spectatorCode) {
-    if (urlCodes) { state.adminCode = adminCode; state.spectatorCode = spectatorCode; saveState(); }
-    currentRole = 'spectator'; saveSession('spectator'); err.style.display = 'none'; startApp(); return;
-  }
-
-  // 2. Si pas trouvé localement, vérifier contre le serveur
+  // Toujours vérifier contre le serveur en priorité
   fetch('/api/state')
-    .then(function(r){ return r.json(); })
+    .then(function(r) { return r.json(); })
     .then(function(data) {
-      if (!data.state) { err.style.display = 'block'; document.getElementById('join-code-input').value = ''; return; }
-      var srvAdmin     = data.state.adminCode;
-      var srvSpectator = data.state.spectatorCode;
-      if (code === srvAdmin) {
+      input.disabled = false;
+      var srvAdmin     = data.state ? data.state.adminCode     : null;
+      var srvSpectator = data.state ? data.state.spectatorCode : null;
+
+      // Vérifier serveur
+      if (srvAdmin && code === srvAdmin.toUpperCase()) {
         state.adminCode = srvAdmin; state.spectatorCode = srvSpectator; saveState();
-        currentRole = 'admin'; saveSession('admin'); err.style.display = 'none'; startApp();
-      } else if (code === srvSpectator) {
-        state.adminCode = srvAdmin; state.spectatorCode = srvSpectator; saveState();
-        currentRole = 'spectator'; saveSession('spectator'); err.style.display = 'none'; startApp();
-      } else {
-        err.style.display = 'block';
-        document.getElementById('join-code-input').value = '';
+        currentRole = 'admin'; saveSession('admin'); err.style.display = 'none'; startApp(); return;
       }
+      if (srvSpectator && code === srvSpectator.toUpperCase()) {
+        state.adminCode = srvAdmin; state.spectatorCode = srvSpectator; saveState();
+        currentRole = 'spectator'; saveSession('spectator'); err.style.display = 'none'; startApp(); return;
+      }
+
+      // Fallback : vérifier local
+      var urlCodes = getUrlCodes();
+      var localAdmin = urlCodes ? urlCodes.a : state.adminCode;
+      var localSpect = urlCodes ? urlCodes.s : state.spectatorCode;
+      if (localAdmin && code === localAdmin.toUpperCase()) {
+        currentRole = 'admin'; saveSession('admin'); err.style.display = 'none'; startApp(); return;
+      }
+      if (localSpect && code === localSpect.toUpperCase()) {
+        currentRole = 'spectator'; saveSession('spectator'); err.style.display = 'none'; startApp(); return;
+      }
+
+      // Rien trouvé
+      err.style.display = 'block';
+      input.value = '';
     })
-    .catch(function() { err.style.display = 'block'; document.getElementById('join-code-input').value = ''; });
+    .catch(function() {
+      input.disabled = false;
+      // Pas de serveur — fallback local uniquement
+      var urlCodes = getUrlCodes();
+      var localAdmin = urlCodes ? urlCodes.a : state.adminCode;
+      var localSpect = urlCodes ? urlCodes.s : state.spectatorCode;
+      if (localAdmin && code === localAdmin.toUpperCase()) {
+        currentRole = 'admin'; saveSession('admin'); startApp(); return;
+      }
+      if (localSpect && code === localSpect.toUpperCase()) {
+        currentRole = 'spectator'; saveSession('spectator'); startApp(); return;
+      }
+      err.style.display = 'block';
+      input.value = '';
+    });
 }
 // Lire les codes depuis l'URL (?a=ADMIN&s=SPECTATEUR)
 function getUrlCodes() {
